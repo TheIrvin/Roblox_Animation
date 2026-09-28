@@ -1,7 +1,7 @@
 # Agent State
 
-Current phase: 3
-Status: PASSED
+Current phase: 4
+Status: IN_PROGRESS
 
 ## Phases
 
@@ -9,7 +9,7 @@ Status: PASSED
 - Phase 1: PASSED
 - Phase 2: PASSED
 - Phase 3: PASSED
-- Phase 4: NOT_STARTED
+- Phase 4: IN_PROGRESS
 - Phase 5: NOT_STARTED
 - Phase 6: NOT_STARTED
 - Phase 7: NOT_STARTED
@@ -31,4 +31,4 @@ Status: PASSED
 None. Phase 3 selection and rotation gate passed in the local viewport.
 
 ## Next required action
-Phase 3 is approved. Start Phase 4: store, commands, and undo/redo.
+Phase 3 is approved. Implement Phase 4 Zustand editor state, semantic commands, history, dirty state, selection, and current frame.
