@@ -1,12 +1,12 @@
 # Agent State
 
 Current phase: 1
-Status: READY_FOR_REVIEW
+Status: PASSED
 
 ## Phases
 
 - Phase 0: PASSED
-- Phase 1: READY_FOR_REVIEW
+- Phase 1: PASSED
 - Phase 2: NOT_STARTED
 - Phase 3: NOT_STARTED
 - Phase 4: NOT_STARTED
@@ -25,10 +25,10 @@ Status: READY_FOR_REVIEW
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`cbb4d94` — Phase 0 marked PASSED after independent review and successful verification.
+`b1d64a1` — Phase 1 math core reviewed independently; full verification passed.
 
 ## Blocking issues
 None. Roblox Studio is installed; Phase 2 rig comparison in Studio remains a required check.
 
 ## Next required action
-Review the Phase 1 math core and its handoff. Do not begin Phase 2 until Phase 1 is marked PASSED.
+Phase 1 is approved. Start Phase 2: R6/R15 rig definitions.
