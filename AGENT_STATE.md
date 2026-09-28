@@ -13,7 +13,6 @@ Status: IN_PROGRESS
 - Phase 5: PASSED
 - Phase 6: PASSED
 - Phase 7: IN_PROGRESS
-- Phase 7: NOT_STARTED
 - Phase 8: NOT_STARTED
 - Phase 9: NOT_STARTED
 - Phase 10: NOT_STARTED
