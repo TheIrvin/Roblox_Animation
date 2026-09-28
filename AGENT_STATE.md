@@ -25,7 +25,7 @@ Status: READY_FOR_REVIEW
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`b1d64a1` — Phase 1 math core reviewed independently; full verification passed.
+`b18c9e1` — Phase 2 definitions reviewed independently; full verification passed. Studio comparison remains a gate.
 
 ## Blocking issues
 The required standard R6 and R15 Block generation/comparison in Roblox Studio remains unverified. Studio is installed and its process is responding, but this task's CUA runtime exposes no native-app inventory or control (`listWindows`/`listApps` are unavailable). The installed R6 mannequin thumbnail is not a Rig Builder rig and cannot satisfy this check.
