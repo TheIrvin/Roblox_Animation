@@ -1,13 +1,13 @@
 # Agent State
 
-Current phase: 1
-Status: PASSED
+Current phase: 2
+Status: IN_PROGRESS
 
 ## Phases
 
 - Phase 0: PASSED
 - Phase 1: PASSED
-- Phase 2: NOT_STARTED
+- Phase 2: IN_PROGRESS
 - Phase 3: NOT_STARTED
 - Phase 4: NOT_STARTED
 - Phase 5: NOT_STARTED
@@ -31,4 +31,4 @@ Status: PASSED
 None. Roblox Studio is installed; Phase 2 rig comparison in Studio remains a required check.
 
 ## Next required action
-Phase 1 is approved. Start Phase 2: R6/R15 rig definitions.
+Implement and verify Phase 2 R6/R15 rig definitions; perform the Studio rig comparison before requesting review.
