@@ -1,0 +1,2224 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Phase 10 export normalizer > normalizes the ThrowRock R6 fixture into a stable full-pose envelope 1`] = `
+{
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "exportId": "fixture-export-v1",
+  "frames": [
+    {
+      "frame": 0,
+      "markers": [],
+      "poses": [
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "HumanoidRootPart",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Cubic",
+          },
+          "jointId": "Torso",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Head",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Left Arm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Cubic",
+          },
+          "jointId": "Right Arm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Left Leg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Right Leg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+      ],
+      "timeSeconds": 0,
+    },
+    {
+      "frame": 9,
+      "markers": [],
+      "poses": [
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "HumanoidRootPart",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "InOut",
+            "style": "Cubic",
+          },
+          "jointId": "Torso",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            -0.13052619219695244,
+            0,
+            0,
+            0.9914448613768515,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Head",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Left Arm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "InOut",
+            "style": "Cubic",
+          },
+          "jointId": "Right Arm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            -0.6427876097037832,
+            0,
+            0,
+            0.7660444431045086,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Left Leg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Right Leg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+      ],
+      "timeSeconds": 0.3,
+    },
+    {
+      "frame": 16,
+      "markers": [
+        {
+          "frame": 16,
+          "id": "throw-r6",
+          "name": "THROW",
+          "value": "rock",
+        },
+      ],
+      "poses": [
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "HumanoidRootPart",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Cubic",
+          },
+          "jointId": "Torso",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0.08715574269964535,
+            0,
+            0,
+            0.9961946980959463,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Head",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Left Arm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Cubic",
+          },
+          "jointId": "Right Arm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0.5735764363787226,
+            0,
+            0,
+            0.8191520442696126,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Left Leg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Right Leg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+      ],
+      "timeSeconds": 0.5333333333333333,
+    },
+    {
+      "frame": 22,
+      "markers": [],
+      "poses": [
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "HumanoidRootPart",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Torso",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Head",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Left Arm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Right Arm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Left Leg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Right Leg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+      ],
+      "timeSeconds": 0.7333333333333333,
+    },
+  ],
+  "project": {
+    "app": {
+      "createdWith": "0.1.0",
+      "name": "Roblox Animator Desktop",
+    },
+    "markers": [
+      {
+        "frame": 16,
+        "id": "throw-r6",
+        "name": "THROW",
+        "value": "rock",
+      },
+    ],
+    "project": {
+      "durationFrames": 22,
+      "fps": 30,
+      "id": "fixture-throw-rock-r6",
+      "loop": false,
+      "name": "ThrowRock",
+      "priority": "Action",
+      "rig": "R6",
+    },
+    "schemaVersion": 1,
+    "tracks": {
+      "Right Arm": {
+        "jointId": "Right Arm",
+        "keyframes": [
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Cubic",
+            },
+            "frame": 0,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0,
+                0,
+                0,
+                1,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "InOut",
+              "style": "Cubic",
+            },
+            "frame": 9,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                -0.6427876097037832,
+                0,
+                0,
+                0.7660444431045086,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Cubic",
+            },
+            "frame": 16,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0.5735764363787226,
+                0,
+                0,
+                0.8191520442696126,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Linear",
+            },
+            "frame": 22,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0,
+                0,
+                0,
+                1,
+              ],
+            },
+          },
+        ],
+      },
+      "Torso": {
+        "jointId": "Torso",
+        "keyframes": [
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Cubic",
+            },
+            "frame": 0,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0,
+                0,
+                0,
+                1,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "InOut",
+              "style": "Cubic",
+            },
+            "frame": 9,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                -0.13052619219695244,
+                0,
+                0,
+                0.9914448613768515,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Cubic",
+            },
+            "frame": 16,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0.08715574269964535,
+                0,
+                0,
+                0.9961946980959463,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Linear",
+            },
+            "frame": 22,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0,
+                0,
+                0,
+                1,
+              ],
+            },
+          },
+        ],
+      },
+    },
+  },
+  "protocolVersion": 1,
+}
+`;
+
+exports[`Phase 10 export normalizer > normalizes the ThrowRock R15 fixture into a stable full-pose envelope 1`] = `
+{
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "exportId": "fixture-export-v1",
+  "frames": [
+    {
+      "frame": 0,
+      "markers": [],
+      "poses": [
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "HumanoidRootPart",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LowerTorso",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Cubic",
+          },
+          "jointId": "UpperTorso",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Head",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftUpperArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftLowerArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftHand",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Cubic",
+          },
+          "jointId": "RightUpperArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Cubic",
+          },
+          "jointId": "RightLowerArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightHand",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftUpperLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftLowerLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftFoot",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightUpperLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightLowerLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightFoot",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+      ],
+      "timeSeconds": 0,
+    },
+    {
+      "frame": 9,
+      "markers": [],
+      "poses": [
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "HumanoidRootPart",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LowerTorso",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "InOut",
+            "style": "Cubic",
+          },
+          "jointId": "UpperTorso",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            -0.13052619219695244,
+            0,
+            0,
+            0.9914448613768515,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Head",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftUpperArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftLowerArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftHand",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "InOut",
+            "style": "Cubic",
+          },
+          "jointId": "RightUpperArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            -0.6427876097037832,
+            0,
+            0,
+            0.7660444431045086,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "InOut",
+            "style": "Cubic",
+          },
+          "jointId": "RightLowerArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            -0.4999999999932617,
+            0,
+            0,
+            0.866025403788329,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightHand",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftUpperLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftLowerLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftFoot",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightUpperLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightLowerLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightFoot",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+      ],
+      "timeSeconds": 0.3,
+    },
+    {
+      "frame": 16,
+      "markers": [
+        {
+          "frame": 16,
+          "id": "throw-r15",
+          "name": "THROW",
+          "value": "rock",
+        },
+      ],
+      "poses": [
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "HumanoidRootPart",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LowerTorso",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Cubic",
+          },
+          "jointId": "UpperTorso",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0.08715574269964535,
+            0,
+            0,
+            0.9961946980959463,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Head",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftUpperArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftLowerArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftHand",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Cubic",
+          },
+          "jointId": "RightUpperArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0.5735764363787226,
+            0,
+            0,
+            0.8191520442696126,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Cubic",
+          },
+          "jointId": "RightLowerArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0.25881904509743586,
+            0,
+            0,
+            0.9659258262904307,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightHand",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftUpperLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftLowerLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftFoot",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightUpperLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightLowerLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightFoot",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+      ],
+      "timeSeconds": 0.5333333333333333,
+    },
+    {
+      "frame": 22,
+      "markers": [],
+      "poses": [
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "HumanoidRootPart",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LowerTorso",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "UpperTorso",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "Head",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftUpperArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftLowerArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftHand",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightUpperArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightLowerArm",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightHand",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftUpperLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftLowerLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "LeftFoot",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightUpperLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightLowerLeg",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+        {
+          "easing": {
+            "direction": "Out",
+            "style": "Linear",
+          },
+          "jointId": "RightFoot",
+          "position": [
+            0,
+            0,
+            0,
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1,
+          ],
+        },
+      ],
+      "timeSeconds": 0.7333333333333333,
+    },
+  ],
+  "project": {
+    "app": {
+      "createdWith": "0.1.0",
+      "name": "Roblox Animator Desktop",
+    },
+    "markers": [
+      {
+        "frame": 16,
+        "id": "throw-r15",
+        "name": "THROW",
+        "value": "rock",
+      },
+    ],
+    "project": {
+      "durationFrames": 22,
+      "fps": 30,
+      "id": "fixture-throw-rock-r15",
+      "loop": false,
+      "name": "ThrowRock",
+      "priority": "Action",
+      "rig": "R15",
+    },
+    "schemaVersion": 1,
+    "tracks": {
+      "RightLowerArm": {
+        "jointId": "RightLowerArm",
+        "keyframes": [
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Cubic",
+            },
+            "frame": 0,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0,
+                0,
+                0,
+                1,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "InOut",
+              "style": "Cubic",
+            },
+            "frame": 9,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                -0.4999999999932617,
+                0,
+                0,
+                0.866025403788329,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Cubic",
+            },
+            "frame": 16,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0.25881904509743586,
+                0,
+                0,
+                0.9659258262904307,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Linear",
+            },
+            "frame": 22,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0,
+                0,
+                0,
+                1,
+              ],
+            },
+          },
+        ],
+      },
+      "RightUpperArm": {
+        "jointId": "RightUpperArm",
+        "keyframes": [
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Cubic",
+            },
+            "frame": 0,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0,
+                0,
+                0,
+                1,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "InOut",
+              "style": "Cubic",
+            },
+            "frame": 9,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                -0.6427876097037832,
+                0,
+                0,
+                0.7660444431045086,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Cubic",
+            },
+            "frame": 16,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0.5735764363787226,
+                0,
+                0,
+                0.8191520442696126,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Linear",
+            },
+            "frame": 22,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0,
+                0,
+                0,
+                1,
+              ],
+            },
+          },
+        ],
+      },
+      "UpperTorso": {
+        "jointId": "UpperTorso",
+        "keyframes": [
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Cubic",
+            },
+            "frame": 0,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0,
+                0,
+                0,
+                1,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "InOut",
+              "style": "Cubic",
+            },
+            "frame": 9,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                -0.13052619219695244,
+                0,
+                0,
+                0.9914448613768515,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Cubic",
+            },
+            "frame": 16,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0.08715574269964535,
+                0,
+                0,
+                0.9961946980959463,
+              ],
+            },
+          },
+          {
+            "easing": {
+              "direction": "Out",
+              "style": "Linear",
+            },
+            "frame": 22,
+            "transform": {
+              "position": [
+                0,
+                0,
+                0,
+              ],
+              "rotation": [
+                0,
+                0,
+                0,
+                1,
+              ],
+            },
+          },
+        ],
+      },
+    },
+  },
+  "protocolVersion": 1,
+}
+`;

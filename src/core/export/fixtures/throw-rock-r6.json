@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "app": { "name": "Roblox Animator Desktop", "createdWith": "0.1.0" },
+  "project": {
+    "id": "fixture-throw-rock-r6",
+    "name": "ThrowRock",
+    "rig": "R6",
+    "fps": 30,
+    "durationFrames": 22,
+    "loop": false,
+    "priority": "Action"
+  },
+  "tracks": {
+    "Torso": {
+      "jointId": "Torso",
+      "keyframes": [
+        {
+          "frame": 0,
+          "transform": { "position": [0, 0, 0], "rotation": [0, 0, 0, 1] },
+          "easing": { "style": "Cubic", "direction": "Out" }
+        },
+        {
+          "frame": 9,
+          "transform": {
+            "position": [0, 0, 0],
+            "rotation": [-0.1305261922, 0, 0, 0.9914448614]
+          },
+          "easing": { "style": "Cubic", "direction": "InOut" }
+        },
+        {
+          "frame": 16,
+          "transform": {
+            "position": [0, 0, 0],
+            "rotation": [0.0871557427, 0, 0, 0.9961946981]
+          },
+          "easing": { "style": "Cubic", "direction": "Out" }
+        },
+        {
+          "frame": 22,
+          "transform": { "position": [0, 0, 0], "rotation": [0, 0, 0, 1] },
+          "easing": { "style": "Linear", "direction": "Out" }
+        }
+      ]
+    },
+    "Right Arm": {
+      "jointId": "Right Arm",
+      "keyframes": [
+        {
+          "frame": 0,
+          "transform": { "position": [0, 0, 0], "rotation": [0, 0, 0, 1] },
+          "easing": { "style": "Cubic", "direction": "Out" }
+        },
+        {
+          "frame": 9,
+          "transform": {
+            "position": [0, 0, 0],
+            "rotation": [-0.6427876097, 0, 0, 0.7660444431]
+          },
+          "easing": { "style": "Cubic", "direction": "InOut" }
+        },
+        {
+          "frame": 16,
+          "transform": {
+            "position": [0, 0, 0],
+            "rotation": [0.5735764364, 0, 0, 0.8191520443]
+          },
+          "easing": { "style": "Cubic", "direction": "Out" }
+        },
+        {
+          "frame": 22,
+          "transform": { "position": [0, 0, 0], "rotation": [0, 0, 0, 1] },
+          "easing": { "style": "Linear", "direction": "Out" }
+        }
+      ]
+    }
+  },
+  "markers": [{ "id": "throw-r6", "frame": 16, "name": "THROW", "value": "rock" }]
+}
