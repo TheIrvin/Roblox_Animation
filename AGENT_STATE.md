@@ -1,7 +1,7 @@
 # Agent State
 
-Current phase: 9
-Status: PASSED
+Current phase: 10
+Status: IN_PROGRESS
 
 ## Phases
 
@@ -15,7 +15,7 @@ Status: PASSED
 - Phase 7: PASSED
 - Phase 8: PASSED
 - Phase 9: PASSED
-- Phase 10: NOT_STARTED
+- Phase 10: IN_PROGRESS
 - Phase 11: NOT_STARTED
 - Phase 12: NOT_STARTED
 - Phase 13: NOT_STARTED
@@ -31,4 +31,4 @@ Status: PASSED
 None. Phase 8 markers survive the `.rbanim` save/reopen path. Phase 9 full verification also passed.
 
 ## Next required action
-Begin Phase 10 export normalization.
+Implement Phase 10 export normalization, validation, deterministic global frame evaluation, and R6/R15 ThrowRock fixtures.
