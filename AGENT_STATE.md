@@ -1,7 +1,7 @@
 # Agent State
 
-Current phase: 10
-Status: PASSED
+Current phase: 11
+Status: IN_PROGRESS
 
 ## Phases
 
@@ -16,7 +16,7 @@ Status: PASSED
 - Phase 8: PASSED
 - Phase 9: PASSED
 - Phase 10: PASSED
-- Phase 11: NOT_STARTED
+- Phase 11: IN_PROGRESS
 - Phase 12: NOT_STARTED
 - Phase 13: NOT_STARTED
 - Phase 14: NOT_STARTED
@@ -31,4 +31,4 @@ Status: PASSED
 None. Phase 8 markers survive the `.rbanim` save/reopen path. Phase 9 full verification also passed.
 
 ## Next required action
-Implement the local Rust bridge with localhost-only binding, bounded payload serving, ACK, and bridge status UI.
+Implement Axum localhost bridge routes and tests, then connect Prepare Export and bridge status in the app.
