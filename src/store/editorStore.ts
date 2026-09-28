@@ -1,5 +1,5 @@
 import { createStore } from "zustand/vanilla";
-import { createBindPose, type RigPose } from "../core/rigs/pose";
+import { createBindPose, type JointPose, type RigPose } from "../core/rigs/pose";
 import { R6_RIG } from "../core/rigs/r6";
 import { R15_RIG } from "../core/rigs/r15";
 import type { RigId } from "../core/rigs/types";
@@ -42,6 +42,8 @@ export interface EditorStoreState {
   readonly isPlaying: boolean;
   readonly autoKey: boolean;
   readonly copiedKeyframe: JointKeyframe | null;
+  readonly copiedPose: RigPose | null;
+  readonly copiedJoint: { readonly jointId: string; readonly pose: JointPose } | null;
   readonly history: HistoryState;
   readonly transaction: Transaction | null;
   readonly savedDocument: EditorDocument;
@@ -59,6 +61,10 @@ export interface EditorStoreState {
   pause: () => void;
   stop: () => void;
   advancePlayback: (deltaSeconds: number) => void;
+  copyPose: () => void;
+  pastePose: () => void;
+  copyJoint: (jointId: string) => void;
+  pasteJoint: (jointId: string) => void;
   copyKeyframe: (jointId: string, frame: number) => void;
   beginTransformTransaction: (jointId: string) => void;
   updateTransform: (
@@ -153,7 +159,11 @@ function applyAutoKey(
       ? [command.jointId]
       : command.type === "reset-pose"
         ? rigs[document.rigId].joints.map((joint) => joint.id)
-        : [];
+        : command.type === "paste-pose" || command.type === "mirror-pose"
+          ? rigs[document.rigId].joints.map((joint) => joint.id)
+          : command.type === "paste-joint"
+            ? [command.jointId]
+            : [];
   if (jointIds.length === 0) return document;
   const tracks = { ...document.tracks };
   for (const jointId of jointIds)
@@ -222,6 +232,8 @@ export function createEditorStore(initialRigId: RigId = "R15") {
     isPlaying: false,
     autoKey: true,
     copiedKeyframe: null,
+    copiedPose: null,
+    copiedJoint: null,
     history: emptyHistory(),
     transaction: null,
     savedDocument: initialDocument,
@@ -338,6 +350,41 @@ export function createEditorStore(initialRigId: RigId = "R15") {
         nextFrame,
       );
       set({ currentFrame: nextFrame, pose, isPlaying });
+    },
+
+    copyPose() {
+      const state = get();
+      const copiedPose = Object.fromEntries(
+        Object.entries(state.pose).map(([jointId, pose]) => [
+          jointId,
+          { position: [...pose.position], rotation: [...pose.rotation] },
+        ]),
+      ) as RigPose;
+      set({ copiedPose });
+    },
+
+    pastePose() {
+      const copiedPose = get().copiedPose;
+      if (copiedPose) get().execute({ type: "paste-pose", pose: copiedPose });
+    },
+
+    copyJoint(jointId) {
+      const state = get();
+      if (!rigs[state.rigId].joints.some((joint) => joint.id === jointId))
+        throw new RangeError(`Unknown joint ${jointId} for ${state.rigId}.`);
+      const pose = state.pose[jointId];
+      set({
+        copiedJoint: {
+          jointId,
+          pose: { position: [...pose.position], rotation: [...pose.rotation] },
+        },
+      });
+    },
+
+    pasteJoint(jointId) {
+      const copiedJoint = get().copiedJoint;
+      if (copiedJoint)
+        get().execute({ type: "paste-joint", jointId, pose: copiedJoint.pose });
     },
 
     copyKeyframe(jointId, frame) {

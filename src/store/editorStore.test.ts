@@ -289,4 +289,65 @@ describe("editor store commands and history", () => {
     expect(store.getState().currentFrame).toBe(store.getState().durationFrames);
     expect(store.getState().isPlaying).toBe(false);
   });
+
+  it("copies and pastes full poses and joints as undoable commands", () => {
+    const store = createEditorStore();
+    store.getState().setAutoKey(false);
+    store.getState().execute({
+      type: "set-joint-position",
+      jointId: "HumanoidRootPart",
+      position: [2, 0, -1],
+    });
+    const sourceRotation = quaternionFromEulerXYZ([0.3, -0.2, 0.1]);
+    store.getState().execute({
+      type: "set-joint-rotation",
+      jointId: "Head",
+      rotation: sourceRotation,
+    });
+    const sourcePose = store.getState().pose;
+    store.getState().copyPose();
+    store.getState().execute({ type: "reset-pose" });
+    expect(store.getState().pose.HumanoidRootPart.position).toEqual([0, 0, 0]);
+    store.getState().undo();
+    expect(store.getState().pose).toEqual(sourcePose);
+    store.getState().redo();
+    expect(store.getState().pose.Head.rotation).toEqual([0, 0, 0, 1]);
+    store.getState().pastePose();
+    expect(store.getState().pose).toEqual(sourcePose);
+    store.getState().undo();
+    expect(store.getState().pose.HumanoidRootPart.position).toEqual([0, 0, 0]);
+    store.getState().redo();
+    expect(store.getState().pose).toEqual(sourcePose);
+
+    store.getState().copyJoint("Head");
+    store.getState().execute({ type: "reset-joint", jointId: "Head" });
+    store.getState().pasteJoint("RightUpperArm");
+    store
+      .getState()
+      .pose.RightUpperArm.rotation.forEach((component, index) =>
+        expect(component).toBeCloseTo(sourceRotation[index], 6),
+      );
+    store.getState().undo();
+    expect(store.getState().pose.RightUpperArm.rotation).toEqual([0, 0, 0, 1]);
+  });
+
+  it.each(["R6", "R15"] as const)("mirrors %s poses and supports undo/redo", (rigId) => {
+    const store = createEditorStore(rigId);
+    store.getState().setAutoKey(false);
+    const leftJoint = rigId === "R6" ? "Left Arm" : "LeftUpperArm";
+    const rightJoint = rigId === "R6" ? "Right Arm" : "RightUpperArm";
+    const leftRotation = quaternionFromEulerXYZ([0.6, -0.2, 0.1]);
+    store.getState().execute({
+      type: "set-joint-rotation",
+      jointId: leftJoint,
+      rotation: leftRotation,
+    });
+    const beforeMirror = store.getState().pose;
+    store.getState().execute({ type: "mirror-pose" });
+    expect(store.getState().pose[rightJoint].rotation).not.toEqual(leftRotation);
+    store.getState().undo();
+    expect(store.getState().pose).toEqual(beforeMirror);
+    store.getState().redo();
+    expect(store.getState().pose[rightJoint].rotation).not.toEqual([0, 0, 0, 1]);
+  });
 });

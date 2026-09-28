@@ -29,6 +29,8 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   const autoKey = useStore(store, (state) => state.autoKey);
   const copiedKeyframe = useStore(store, (state) => state.copiedKeyframe);
   const loop = useStore(store, (state) => state.loop);
+  const copiedPose = useStore(store, (state) => state.copiedPose);
+  const copiedJoint = useStore(store, (state) => state.copiedJoint);
   const isDirty = useStore(store, (state) => state.isDirty);
   const canUndo = useStore(store, (state) => state.canUndo);
   const canRedo = useStore(store, (state) => state.canRedo);
@@ -43,6 +45,10 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   const pause = useStore(store, (state) => state.pause);
   const stop = useStore(store, (state) => state.stop);
   const advancePlayback = useStore(store, (state) => state.advancePlayback);
+  const copyPose = useStore(store, (state) => state.copyPose);
+  const pastePose = useStore(store, (state) => state.pastePose);
+  const copyJoint = useStore(store, (state) => state.copyJoint);
+  const pasteJoint = useStore(store, (state) => state.pasteJoint);
   const copyKeyframe = useStore(store, (state) => state.copyKeyframe);
   const beginTransformTransaction = useStore(
     store,
@@ -108,6 +114,17 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
     } catch (error) {
       setTimelineError(
         error instanceof Error ? error.message : "No se pudo actualizar el timeline.",
+      );
+    }
+  };
+
+  const runPoseAction = (action: () => void) => {
+    try {
+      action();
+      setTimelineError("");
+    } catch (error) {
+      setTimelineError(
+        error instanceof Error ? error.message : "No se pudo aplicar la pose.",
       );
     }
   };
@@ -272,6 +289,21 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
               <button className="secondary-button reset-button" onClick={resetSelected}>
                 Reset Joint
               </button>
+              <div className="joint-pose-tools">
+                <button
+                  className="secondary-button"
+                  onClick={() => copyJoint(selectedJoint.id)}
+                >
+                  Copy Joint
+                </button>
+                <button
+                  className="secondary-button"
+                  disabled={!copiedJoint}
+                  onClick={() => runPoseAction(() => pasteJoint(selectedJoint.id))}
+                >
+                  Paste Joint
+                </button>
+              </div>
               <p className="inspector-note">
                 Los valores se guardan como transforms locales del editor.
               </p>
@@ -312,6 +344,28 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
             />
             Auto Key
           </label>
+          <button className="timeline-button" onClick={copyPose}>
+            Copy Pose
+          </button>
+          <button
+            className="timeline-button"
+            disabled={!copiedPose}
+            onClick={() => runPoseAction(pastePose)}
+          >
+            Paste Pose
+          </button>
+          <button
+            className="timeline-button"
+            onClick={() => runTimelineCommand({ type: "mirror-pose" })}
+          >
+            Mirror Pose
+          </button>
+          <button
+            className="timeline-button"
+            onClick={() => runTimelineCommand({ type: "reset-pose" })}
+          >
+            Reset Pose
+          </button>
           <button
             className="timeline-button primary"
             aria-label="Add keyframe"

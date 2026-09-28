@@ -125,6 +125,9 @@ button {
   min-height: 0;
   background: #17191f;
 }
+.inspector-panel {
+  overflow-y: auto;
+}
 .timeline-panel {
   display: flex;
   min-height: 152px;
@@ -137,11 +140,13 @@ button {
 }
 .timeline-toolbar {
   display: flex;
-  min-height: 39px;
+  min-height: 68px;
+  flex-wrap: wrap;
   align-items: center;
+  align-content: center;
   gap: 7px;
   border-bottom: 1px solid #292c34;
-  padding: 0 12px;
+  padding: 5px 12px;
 }
 .timeline-toolbar strong {
   margin-right: 8px;
@@ -391,6 +396,7 @@ button {
   pointer-events: none;
 }
 .inspector-content {
+  min-height: 0;
   padding: 14px;
 }
 .joint-id {
@@ -472,6 +478,11 @@ button {
 }
 .reset-button {
   width: 100%;
+}
+.joint-pose-tools {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
 }
 .inspector-note {
   margin: 13px 0 0;

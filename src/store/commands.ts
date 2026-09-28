@@ -7,6 +7,9 @@ import {
 import { R6_RIG } from "../core/rigs/r6";
 import { R15_RIG } from "../core/rigs/r15";
 import type { RigId } from "../core/rigs/types";
+import type { RigPose, JointPose } from "../core/rigs/pose";
+import { normalizeQuaternion } from "../core/math/quaternion";
+import { mirrorRigPose } from "../core/rigs/poseTools";
 import {
   deleteKeyframe,
   moveKeyframe,
@@ -48,7 +51,10 @@ export type EditorCommand =
     }
   | { readonly type: "set-duration"; readonly durationFrames: number }
   | { readonly type: "set-fps"; readonly fps: number }
-  | { readonly type: "set-loop"; readonly loop: boolean };
+  | { readonly type: "set-loop"; readonly loop: boolean }
+  | { readonly type: "paste-pose"; readonly pose: RigPose }
+  | { readonly type: "paste-joint"; readonly jointId: string; readonly pose: JointPose }
+  | { readonly type: "mirror-pose" };
 
 export function commandLabel(command: EditorCommand): string {
   switch (command.type) {
@@ -76,6 +82,12 @@ export function commandLabel(command: EditorCommand): string {
       return "Set animation FPS";
     case "set-loop":
       return "Set animation loop";
+    case "paste-pose":
+      return "Paste pose";
+    case "paste-joint":
+      return `Paste ${command.jointId} pose`;
+    case "mirror-pose":
+      return "Mirror pose";
   }
 }
 
@@ -191,5 +203,42 @@ export function applyEditorCommand(
       return { ...document, fps: command.fps };
     case "set-loop":
       return { ...document, loop: command.loop };
+    case "paste-pose": {
+      const pose = {} as Record<string, JointPose>;
+      for (const joint of rigs[document.rigId].joints) {
+        const source = command.pose[joint.id];
+        if (!source) throw new RangeError(`Pose is missing joint ${joint.id}.`);
+        if (!source.position.every(Number.isFinite))
+          throw new RangeError(`Pose position for ${joint.id} must be finite.`);
+        pose[joint.id] = {
+          position: [...source.position],
+          rotation: normalizeQuaternion(source.rotation),
+        };
+      }
+      return { ...document, pose };
+    }
+    case "paste-joint": {
+      const joint = rigs[document.rigId].joints.find(
+        (candidate) => candidate.id === command.jointId,
+      );
+      if (!joint) throw new RangeError(`Unknown joint ${command.jointId}.`);
+      if (!command.pose.position.every(Number.isFinite))
+        throw new RangeError(`Pose position for ${joint.id} must be finite.`);
+      return {
+        ...document,
+        pose: {
+          ...document.pose,
+          [joint.id]: {
+            position: [...command.pose.position],
+            rotation: normalizeQuaternion(command.pose.rotation),
+          },
+        },
+      };
+    }
+    case "mirror-pose":
+      return {
+        ...document,
+        pose: mirrorRigPose(rigs[document.rigId], document.pose),
+      };
   }
 }
