@@ -1,6 +1,6 @@
 # Agent State
 
-Current phase: 7
+Current phase: 8
 Status: IN_PROGRESS
 
 ## Phases
@@ -12,8 +12,8 @@ Status: IN_PROGRESS
 - Phase 4: PASSED
 - Phase 5: PASSED
 - Phase 6: PASSED
-- Phase 7: IN_PROGRESS
-- Phase 8: NOT_STARTED
+- Phase 7: PASSED
+- Phase 8: IN_PROGRESS
 - Phase 9: NOT_STARTED
 - Phase 10: NOT_STARTED
 - Phase 11: NOT_STARTED
@@ -25,10 +25,10 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`9f4d8cf` — Phase 7 implementation has a full verification pass and is ready for review.
+`6bed800` — Phase 7 pose tools passed full verification, R6/R15 mirror tests, and UI smoke.
 
 ## Blocking issues
-Phase 7 implementation is ready for review. Full verification, R6/R15 mirror cases, clipboard history, and UI smoke passed.
+None. Phase 7 pose tools, mirror, clipboard, and history passed full verification.
 
 ## Next required action
-Review Phase 7 handoff and full verification, then mark it PASSED before starting Phase 8 markers.
+Implement Phase 8 event markers: create, rename, move, delete, validation, timeline lane, and ThrowRock `THROW` at frame 16. Preserve markers in history and the later `.rbanim` project model.
