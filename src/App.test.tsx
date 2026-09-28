@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import App from "./App";
 
@@ -10,20 +10,38 @@ vi.mock("@react-three/drei", () => ({
   OrbitControls: () => null,
 }));
 
-describe("bootstrap application", () => {
-  it("renders the desktop workspace shell", () => {
+describe("editor workspace", () => {
+  it("renders the R15 joint tree, viewport placeholder, and inspector", () => {
     render(<App />);
 
-    expect(
-      screen.getByRole("heading", { name: "Un espacio claro para empezar a animar." }),
-    ).toBeInTheDocument();
     expect(screen.getByText("Roblox Animator Desktop")).toBeInTheDocument();
-    expect(screen.getByText("Bootstrap ready")).toBeInTheDocument();
+    expect(screen.getByTestId("preview-canvas")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Right Upper Arm" })).toBeInTheDocument();
+    expect(screen.getByRole("complementary", { name: "Inspector" })).toBeInTheDocument();
   });
 
-  it("mounts a placeholder for the 3D renderer", () => {
+  it("selects a joint and edits its canonical rotation through inspector fields", () => {
     render(<App />);
 
-    expect(screen.getByTestId("preview-canvas")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Right Upper Arm" }));
+    expect(screen.getByText("Seleccionado: RightUpperArm")).toBeInTheDocument();
+    fireEvent.change(screen.getByRole("spinbutton", { name: "X Rotation" }), {
+      target: { value: "45" },
+    });
+
+    expect(screen.getByRole("spinbutton", { name: "X Rotation" })).toHaveValue(45);
+  });
+
+  it("switches between the approved R6 and R15 joint definitions", () => {
+    render(<App />);
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Rig" }), {
+      target: { value: "R6" },
+    });
+
+    expect(screen.getByRole("button", { name: "Right Arm" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Right Upper Arm" }),
+    ).not.toBeInTheDocument();
   });
 });

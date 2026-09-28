@@ -1,14 +1,14 @@
 # Agent State
 
 Current phase: 3
-Status: IN_PROGRESS
+Status: READY_FOR_REVIEW
 
 ## Phases
 
 - Phase 0: PASSED
 - Phase 1: PASSED
 - Phase 2: PASSED
-- Phase 3: IN_PROGRESS
+- Phase 3: READY_FOR_REVIEW
 - Phase 4: NOT_STARTED
 - Phase 5: NOT_STARTED
 - Phase 6: NOT_STARTED
@@ -28,7 +28,7 @@ Status: IN_PROGRESS
 `3174720` — Phase 2 passed after independent verification and R6/R15 Studio name comparison.
 
 ## Blocking issues
-None. Primitive dimensions and offsets will be reviewed in the Phase 3 viewport.
+No implementation blocker. Manual native viewport interaction on R6/R15 remains for orchestrator review.
 
 ## Next required action
-Implement Phase 3 viewport, rig rendering, selection, rotation gizmo, and inspector basics.
+Review docs/handoffs/PHASE_03.md and verify selection/rotation of R6 and R15 arms in the desktop viewport.

@@ -5,3 +5,4 @@ src-tauri/gen/
 package-lock.json
 docs/
 AGENT_STATE.md
+*.gltf
