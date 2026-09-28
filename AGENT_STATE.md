@@ -1,7 +1,7 @@
 # Agent State
 
 Current phase: 10
-Status: READY_FOR_REVIEW
+Status: PASSED
 
 ## Phases
 
@@ -15,7 +15,7 @@ Status: READY_FOR_REVIEW
 - Phase 7: PASSED
 - Phase 8: PASSED
 - Phase 9: PASSED
-- Phase 10: READY_FOR_REVIEW
+- Phase 10: PASSED
 - Phase 11: NOT_STARTED
 - Phase 12: NOT_STARTED
 - Phase 13: NOT_STARTED
@@ -25,10 +25,10 @@ Status: READY_FOR_REVIEW
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`c72ae6e` — Phase 10 working tree passed `npm run verify`; R6/R15 ThrowRock envelopes match committed fixture snapshots.
+`7f4e617` — Phase 10 implementation commit passed `npm run verify`; R6/R15 ThrowRock envelopes match fixture snapshots.
 
 ## Blocking issues
 None. Phase 8 markers survive the `.rbanim` save/reopen path. Phase 9 full verification also passed.
 
 ## Next required action
-Review Phase 10 normalization and snapshots, mark it PASSED, then implement the local Rust bridge.
+Implement the local Rust bridge with localhost-only binding, bounded payload serving, ACK, and bridge status UI.
