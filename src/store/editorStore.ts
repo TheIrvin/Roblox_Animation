@@ -3,6 +3,7 @@ import { createBindPose, type RigPose } from "../core/rigs/pose";
 import { R6_RIG } from "../core/rigs/r6";
 import { R15_RIG } from "../core/rigs/r15";
 import type { RigId } from "../core/rigs/types";
+import { evaluateAnimationFrame } from "../core/animation/evaluator";
 import {
   findKeyframe,
   upsertKeyframe,
@@ -35,8 +36,10 @@ export interface EditorStoreState {
   readonly tracks: EditorDocument["tracks"];
   readonly fps: number;
   readonly durationFrames: number;
+  readonly loop: boolean;
   readonly selectedJointId: string | null;
   readonly currentFrame: number;
+  readonly isPlaying: boolean;
   readonly autoKey: boolean;
   readonly copiedKeyframe: JointKeyframe | null;
   readonly history: HistoryState;
@@ -51,6 +54,11 @@ export interface EditorStoreState {
   setAutoKey: (enabled: boolean) => void;
   setDuration: (durationFrames: number) => void;
   setFps: (fps: number) => void;
+  setLoop: (loop: boolean) => void;
+  play: () => void;
+  pause: () => void;
+  stop: () => void;
+  advancePlayback: (deltaSeconds: number) => void;
   copyKeyframe: (jointId: string, frame: number) => void;
   beginTransformTransaction: (jointId: string) => void;
   updateTransform: (
@@ -96,6 +104,7 @@ function snapshotDocument(document: EditorDocument): EditorDocument {
     ),
     fps: document.fps,
     durationFrames: document.durationFrames,
+    loop: document.loop,
   };
 }
 
@@ -104,7 +113,10 @@ function documentsEqual(left: EditorDocument, right: EditorDocument): boolean {
 }
 
 function documentFromState(
-  state: Pick<EditorStoreState, "rigId" | "pose" | "tracks" | "fps" | "durationFrames">,
+  state: Pick<
+    EditorStoreState,
+    "rigId" | "pose" | "tracks" | "fps" | "durationFrames" | "loop"
+  >,
 ): EditorDocument {
   return {
     rigId: state.rigId,
@@ -112,6 +124,7 @@ function documentFromState(
     tracks: state.tracks,
     fps: state.fps,
     durationFrames: state.durationFrames,
+    loop: state.loop,
   };
 }
 
@@ -122,6 +135,7 @@ function stateForDocument(document: EditorDocument) {
     tracks: document.tracks,
     fps: document.fps,
     durationFrames: document.durationFrames,
+    loop: document.loop,
   };
 }
 
@@ -146,7 +160,7 @@ function applyAutoKey(
     tracks[jointId] = upsertKeyframe(
       tracks[jointId],
       jointId,
-      currentFrame,
+      Math.round(currentFrame),
       document.pose[jointId],
       document.durationFrames,
     );
@@ -163,12 +177,14 @@ function stateWithDocument(
   const selectedJointExists = rigs[document.rigId].joints.some(
     (joint) => joint.id === state.selectedJointId,
   );
-  const savedFramePose = { ...state.savedDocument.pose };
-  if (state.savedDocument.rigId === document.rigId)
-    for (const jointId of Object.keys(state.savedDocument.tracks)) {
-      const keyframe = findKeyframe(state.savedDocument.tracks, jointId, previewFrame);
-      if (keyframe) savedFramePose[jointId] = keyframe.transform;
-    }
+  const savedFramePose =
+    state.savedDocument.rigId === document.rigId
+      ? evaluateAnimationFrame(
+          state.savedDocument.tracks,
+          state.savedDocument.pose,
+          previewFrame,
+        )
+      : state.savedDocument.pose;
   const isSavedFramePreview =
     state.savedDocument.rigId === document.rigId &&
     JSON.stringify(document.pose) === JSON.stringify(savedFramePose);
@@ -196,12 +212,14 @@ export function createEditorStore(initialRigId: RigId = "R15") {
     tracks: {},
     fps: DEFAULT_FPS,
     durationFrames: DEFAULT_DURATION,
+    loop: false,
   });
 
   return createStore<EditorStoreState>()((set, get) => ({
     ...initialDocument,
     selectedJointId: rigs[initialRigId].rootId,
     currentFrame: DEFAULT_FRAME,
+    isPlaying: false,
     autoKey: true,
     copiedKeyframe: null,
     history: emptyHistory(),
@@ -256,19 +274,12 @@ export function createEditorStore(initialRigId: RigId = "R15") {
       if (!Number.isSafeInteger(frame) || frame < 0 || frame > get().durationFrames)
         throw new RangeError("Current frame must be within the animation duration.");
       const state = get();
-      const pose = {
-        ...(state.isDirty ? state.pose : state.savedDocument.pose),
-      };
-      for (const [jointId, track] of Object.entries(state.tracks)) {
-        const keyframe = findKeyframe(state.tracks, jointId, frame);
-        if (keyframe) pose[jointId] = keyframe.transform;
-        else if (track.keyframes.length === 0) delete pose[jointId];
-      }
-      const document = snapshotDocument({ ...documentFromState(state), pose });
-      set((current) => ({
-        ...stateWithDocument(current, document, current.history, null, frame),
-        currentFrame: frame,
-      }));
+      const pose = evaluateAnimationFrame(
+        state.tracks,
+        state.isDirty ? state.pose : state.savedDocument.pose,
+        frame,
+      );
+      set({ pose, currentFrame: frame });
     },
 
     setAutoKey(enabled) {
@@ -283,6 +294,50 @@ export function createEditorStore(initialRigId: RigId = "R15") {
 
     setFps(fps) {
       get().execute({ type: "set-fps", fps });
+    },
+
+    setLoop(loop) {
+      get().execute({ type: "set-loop", loop });
+    },
+
+    play() {
+      set({ isPlaying: true });
+    },
+
+    pause() {
+      set({ isPlaying: false });
+    },
+
+    stop() {
+      const state = get();
+      const pose = evaluateAnimationFrame(
+        state.tracks,
+        state.isDirty ? state.pose : state.savedDocument.pose,
+        0,
+      );
+      set({ isPlaying: false, currentFrame: 0, pose });
+    },
+
+    advancePlayback(deltaSeconds) {
+      if (!Number.isFinite(deltaSeconds) || deltaSeconds < 0)
+        throw new RangeError("Playback delta must be a finite non-negative duration.");
+      const state = get();
+      if (!state.isPlaying || deltaSeconds === 0) return;
+      let nextFrame = state.currentFrame + deltaSeconds * state.fps;
+      let isPlaying = true;
+      if (nextFrame >= state.durationFrames) {
+        if (state.loop) nextFrame %= state.durationFrames;
+        else {
+          nextFrame = state.durationFrames;
+          isPlaying = false;
+        }
+      }
+      const pose = evaluateAnimationFrame(
+        state.tracks,
+        state.isDirty ? state.pose : state.savedDocument.pose,
+        nextFrame,
+      );
+      set({ currentFrame: nextFrame, pose, isPlaying });
     },
 
     copyKeyframe(jointId, frame) {

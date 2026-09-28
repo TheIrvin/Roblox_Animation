@@ -47,7 +47,8 @@ export type EditorCommand =
       readonly keyframe: JointKeyframe;
     }
   | { readonly type: "set-duration"; readonly durationFrames: number }
-  | { readonly type: "set-fps"; readonly fps: number };
+  | { readonly type: "set-fps"; readonly fps: number }
+  | { readonly type: "set-loop"; readonly loop: boolean };
 
 export function commandLabel(command: EditorCommand): string {
   switch (command.type) {
@@ -73,6 +74,8 @@ export function commandLabel(command: EditorCommand): string {
       return "Set animation duration";
     case "set-fps":
       return "Set animation FPS";
+    case "set-loop":
+      return "Set animation loop";
   }
 }
 
@@ -186,5 +189,7 @@ export function applyEditorCommand(
       if (!Number.isSafeInteger(command.fps) || command.fps < 1 || command.fps > 240)
         throw new RangeError("FPS must be an integer from 1 to 240.");
       return { ...document, fps: command.fps };
+    case "set-loop":
+      return { ...document, loop: command.loop };
   }
 }

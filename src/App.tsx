@@ -22,11 +22,13 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   const pose = useStore(store, (state) => state.pose);
   const selectedJointId = useStore(store, (state) => state.selectedJointId);
   const currentFrame = useStore(store, (state) => state.currentFrame);
+  const isPlaying = useStore(store, (state) => state.isPlaying);
   const tracks = useStore(store, (state) => state.tracks);
   const fps = useStore(store, (state) => state.fps);
   const durationFrames = useStore(store, (state) => state.durationFrames);
   const autoKey = useStore(store, (state) => state.autoKey);
   const copiedKeyframe = useStore(store, (state) => state.copiedKeyframe);
+  const loop = useStore(store, (state) => state.loop);
   const isDirty = useStore(store, (state) => state.isDirty);
   const canUndo = useStore(store, (state) => state.canUndo);
   const canRedo = useStore(store, (state) => state.canRedo);
@@ -36,6 +38,11 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   const setAutoKey = useStore(store, (state) => state.setAutoKey);
   const setDuration = useStore(store, (state) => state.setDuration);
   const setFps = useStore(store, (state) => state.setFps);
+  const setLoop = useStore(store, (state) => state.setLoop);
+  const play = useStore(store, (state) => state.play);
+  const pause = useStore(store, (state) => state.pause);
+  const stop = useStore(store, (state) => state.stop);
+  const advancePlayback = useStore(store, (state) => state.advancePlayback);
   const copyKeyframe = useStore(store, (state) => state.copyKeyframe);
   const beginTransformTransaction = useStore(
     store,
@@ -52,6 +59,20 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   );
   const [timelineError, setTimelineError] = useState("");
   const draggedMarker = useRef(false);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    let animationFrame = 0;
+    let previousTimestamp: number | null = null;
+    const tick = (timestamp: number) => {
+      if (previousTimestamp !== null)
+        advancePlayback((timestamp - previousTimestamp) / 1000);
+      previousTimestamp = timestamp;
+      animationFrame = window.requestAnimationFrame(tick);
+    };
+    animationFrame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [advancePlayback, isPlaying]);
 
   const sortedJoints = useMemo(() => [...rig.joints], [rig]);
   const rotation =
@@ -123,6 +144,25 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [redo, undo]);
+
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if (event.code !== "Space" || event.ctrlKey || event.metaKey || event.altKey)
+        return;
+      const target = event.target;
+      if (
+        target instanceof HTMLElement &&
+        (target.isContentEditable ||
+          /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(target.tagName))
+      )
+        return;
+      event.preventDefault();
+      if (isPlaying) pause();
+      else play();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isPlaying, pause, play]);
 
   return (
     <main className="app-shell">
@@ -246,6 +286,24 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
       <section className="timeline-panel" aria-label="Timeline de animación">
         <div className="timeline-toolbar">
           <strong>Timeline</strong>
+          <button className="timeline-button" aria-label="Stop playback" onClick={stop}>
+            ■
+          </button>
+          <button
+            className="timeline-button primary"
+            aria-label={isPlaying ? "Pause playback" : "Play animation"}
+            onClick={isPlaying ? pause : play}
+          >
+            {isPlaying ? "❚❚" : "▶"}
+          </button>
+          <label className="auto-key-control loop-control">
+            <input
+              type="checkbox"
+              checked={loop}
+              onChange={(event) => setLoop(event.target.checked)}
+            />
+            Loop
+          </label>
           <label className="auto-key-control">
             <input
               type="checkbox"
@@ -263,7 +321,7 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
               runTimelineCommand({
                 type: "add-keyframe",
                 jointId: selectedJoint.id,
-                frame: currentFrame,
+                frame: Math.round(currentFrame),
               })
             }
           >
@@ -302,7 +360,7 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
               runTimelineCommand({
                 type: "paste-keyframe",
                 jointId: selectedJoint.id,
-                frame: currentFrame,
+                frame: Math.round(currentFrame),
                 keyframe: copiedKeyframe,
               })
             }

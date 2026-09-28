@@ -9,6 +9,7 @@ export interface EditorDocument {
   readonly tracks: AnimationTracks;
   readonly fps: number;
   readonly durationFrames: number;
+  readonly loop: boolean;
 }
 
 /** One semantic edit, stored as immutable before/after document snapshots. */

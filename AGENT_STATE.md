@@ -25,10 +25,10 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`12a8f42` — Phase 5 marked PASSED after complete frontend/Rust verification and timeline smoke.
+`8d7816b` — Phase 6 started; implementation now has a full verification pass and is ready for review.
 
 ## Blocking issues
-None. Phase 5 is complete; Phase 6 playback and interpolation are underway.
+Phase 6 implementation is ready for review. Full verification passed with the preliminary R15 ThrowRock evaluator fixture.
 
 ## Next required action
-Implement Phase 6 only: exact keyframe evaluation, independent sparse-track interpolation, playback controls, loop handling, and real-time frame mapping. Preserve Phase 5 keyframe semantics and Phase 4 history.
+Review Phase 6 handoff and full verification, then mark it PASSED before starting Phase 7 pose tools.

@@ -236,4 +236,57 @@ describe("editor store commands and history", () => {
     expect(store.getState().pose.RightUpperArm.rotation).toEqual(rotations[2]);
     expect(store.getState().isDirty).toBe(false);
   });
+
+  it("plays in real time, pauses, stops, and wraps when looping", () => {
+    const store = createEditorStore();
+    store.getState().setAutoKey(false);
+    store.getState().execute({
+      type: "add-keyframe",
+      jointId: "HumanoidRootPart",
+      frame: 0,
+    });
+    store.getState().execute({
+      type: "set-joint-position",
+      jointId: "HumanoidRootPart",
+      position: [22, 0, 0],
+    });
+    store.getState().execute({
+      type: "add-keyframe",
+      jointId: "HumanoidRootPart",
+      frame: 22,
+    });
+    store.getState().markSaved();
+
+    store.getState().play();
+    store.getState().advancePlayback(0.5);
+    expect(store.getState().currentFrame).toBe(15);
+    expect(store.getState().pose.HumanoidRootPart.position[0]).toBeGreaterThan(15);
+    expect(store.getState().pose.HumanoidRootPart.position[0]).toBeLessThan(22);
+    store.getState().pause();
+    expect(store.getState().isPlaying).toBe(false);
+
+    store.getState().setLoop(true);
+    store.getState().play();
+    store.getState().advancePlayback(0.5);
+    expect(store.getState().currentFrame).toBe(8);
+    expect(store.getState().isPlaying).toBe(true);
+    store.getState().stop();
+    expect(store.getState().currentFrame).toBe(0);
+    expect(store.getState().isPlaying).toBe(false);
+    expect(() => store.getState().advancePlayback(-0.1)).toThrow(RangeError);
+  });
+
+  it("stops at the duration when playback is not looping", () => {
+    const store = createEditorStore();
+    store.getState().setCurrentFrame(5);
+    store.getState().play();
+    store.getState().advancePlayback(0.1);
+    expect(store.getState().currentFrame).toBe(8);
+    store.getState().pause();
+    expect(store.getState().currentFrame).toBe(8);
+    store.getState().play();
+    store.getState().advancePlayback(2);
+    expect(store.getState().currentFrame).toBe(store.getState().durationFrames);
+    expect(store.getState().isPlaying).toBe(false);
+  });
 });
