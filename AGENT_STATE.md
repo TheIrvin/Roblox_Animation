@@ -1,7 +1,7 @@
 # Agent State
 
 Current phase: 4
-Status: IN_PROGRESS
+Status: PASSED
 
 ## Phases
 
@@ -9,7 +9,7 @@ Status: IN_PROGRESS
 - Phase 1: PASSED
 - Phase 2: PASSED
 - Phase 3: PASSED
-- Phase 4: IN_PROGRESS
+- Phase 4: PASSED
 - Phase 5: NOT_STARTED
 - Phase 6: NOT_STARTED
 - Phase 7: NOT_STARTED
@@ -25,10 +25,10 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`8f3730f` — Phase 3 reviewed independently; full verification and manual R6/R15 arm smoke passed.
+`f53f819` — Phase 4 reviewed independently; full verification and manual imported R6/R15 model, transform, reset, undo, and redo smoke passed.
 
 ## Blocking issues
-None. The Phase 4 store and viewport model integration are awaiting final independent verification.
+None. Phase 4's store, undo/redo, and imported model viewport passed independent review.
 
 ## Next required action
-Run the complete verification suite and review the Phase 4 handoff. Do not start Phase 5 until Phase 4 is marked PASSED.
+Begin Phase 5: timeline, keyframes, Auto Key, duration/FPS, and copy/paste keyframe.
