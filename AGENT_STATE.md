@@ -1,7 +1,7 @@
 # Agent State
 
 Current phase: 5
-Status: IN_PROGRESS
+Status: PASSED
 
 ## Phases
 
@@ -10,7 +10,7 @@ Status: IN_PROGRESS
 - Phase 2: PASSED
 - Phase 3: PASSED
 - Phase 4: PASSED
-- Phase 5: IN_PROGRESS
+- Phase 5: PASSED
 - Phase 6: NOT_STARTED
 - Phase 7: NOT_STARTED
 - Phase 8: NOT_STARTED
@@ -25,10 +25,10 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`f53f819` — Phase 4 verified with full checks and manual imported R6/R15 viewport smoke.
+`dfce928` — Phase 5 full verification passed; timeline UI smoke and three-pose keyframe store flow passed.
 
 ## Blocking issues
-Phase 5 implementation is ready for review. Full checks, timeline UI smoke, and the three-pose store flow pass.
+None. Phase 5 timeline, keyframe commands, history, and verification passed.
 
 ## Next required action
-Review Phase 5 handoff, then mark it PASSED before starting Phase 6 playback and interpolation.
+Begin Phase 6 playback and interpolation: exact keyframe values, interpolation between sparse per-joint tracks, play/pause/stop, loop, and real time to frame mapping. Preserve Phase 5 keyframe semantics and Phase 4 history.
