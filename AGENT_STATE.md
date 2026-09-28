@@ -1,11 +1,11 @@
 # Agent State
 
 Current phase: 0
-Status: BLOCKED
+Status: READY_FOR_REVIEW
 
 ## Phases
 
-- Phase 0: BLOCKED
+- Phase 0: READY_FOR_REVIEW
 - Phase 1: NOT_STARTED
 - Phase 2: NOT_STARTED
 - Phase 3: NOT_STARTED
@@ -25,12 +25,10 @@ Status: BLOCKED
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`ea06cc1` — project specifications committed and pushed; no implementation phase has passed.
+`9d25dcb` — specifications and preflight status committed and pushed.
 
 ## Blocking issues
-- `npm`, `rustup`, `rustc`, and `cargo` are unavailable. The installed Node.js runtime is 24.19.0, but its directory contains only `node.exe` and no npm.
-- Microsoft C++ Build Tools and Windows SDK were not found. Tauri's Windows build/runtime gate cannot be verified without them.
-- Roblox Studio was not found; only Roblox Player files are present. Phase 2's required rig comparison in Studio cannot be completed.
+None for Phase 1. Roblox Studio is installed; Phase 2 rig comparison in Studio remains a required check.
 
 ## Next required action
-Install/enable the missing Phase 0 toolchain and confirm Roblox Studio is available before starting implementation. Rojo is not required for Phases 0–5.
+Orchestrator: inspect the Phase 0 diff and verify its gates before marking it PASSED.
