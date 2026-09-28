@@ -1,6 +1,6 @@
 # Agent State
 
-Current phase: 8
+Current phase: 9
 Status: IN_PROGRESS
 
 ## Phases
@@ -14,7 +14,7 @@ Status: IN_PROGRESS
 - Phase 6: PASSED
 - Phase 7: PASSED
 - Phase 8: IN_PROGRESS
-- Phase 9: NOT_STARTED
+- Phase 9: IN_PROGRESS
 - Phase 10: NOT_STARTED
 - Phase 11: NOT_STARTED
 - Phase 12: NOT_STARTED
@@ -25,10 +25,10 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`6bed800` — Phase 7 pose tools passed full verification, R6/R15 mirror tests, and UI smoke. Phase 8 marker editing also passes full verification; save/reopen acceptance awaits Phase 9.
+`e02df18` — Phase 8 marker editing and full verification passed; Phase 8's file save/reopen gate is being closed as Phase 9 adds persistence.
 
 ## Blocking issues
-Phase 8 save/reopen acceptance cannot be exercised until Phase 9 adds `.rbanim` persistence. Marker model, history, validation, UI, and full verification are complete.
+Phase 8 gate awaits Phase 9 `.rbanim` save/reopen. Marker model, history, validation, UI, and full verification are complete.
 
 ## Next required action
-Implement Phase 9 project validation, `.rbanim` serialization/parser, Rust open/save, and file dialogs. Then reopen a saved marker project to close Phase 8's gate.
+Implement Phase 9 project validation, `.rbanim` serialization/parser, Rust open/save, safe writes, and native file dialogs. Preserve markers through save and reopen to close Phase 8's gate.
