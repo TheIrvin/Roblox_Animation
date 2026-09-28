@@ -10,6 +10,11 @@ import {
   type JointKeyframe,
 } from "../core/animation/keyframes";
 import type { AnimationMarker } from "../core/animation/markers";
+import {
+  createProjectId,
+  type AnimationPriority,
+  type RbanimProjectV1,
+} from "../core/project/rbanim";
 import { applyEditorCommand, commandLabel, type EditorCommand } from "./commands";
 import {
   emptyHistory,
@@ -38,6 +43,10 @@ interface Transaction {
 }
 
 export interface EditorStoreState {
+  readonly projectId: string;
+  readonly projectName: string;
+  readonly priority: AnimationPriority;
+  readonly filePath: string | null;
   readonly rigId: RigId;
   readonly pose: RigPose;
   readonly tracks: EditorDocument["tracks"];
@@ -68,6 +77,10 @@ export interface EditorStoreState {
   setLoop: (loop: boolean) => void;
   selectMarker: (markerId: string | null) => void;
   addMarker: (name: string, frame?: number, value?: string) => string;
+  renameProject: (name: string) => void;
+  newProject: (rigId?: RigId) => void;
+  loadProject: (project: RbanimProjectV1, path: string) => void;
+  setFilePath: (path: string | null) => void;
   play: () => void;
   pause: () => void;
   stop: () => void;
@@ -93,6 +106,9 @@ export interface EditorStoreState {
 
 function snapshotDocument(document: EditorDocument): EditorDocument {
   return {
+    projectId: document.projectId,
+    projectName: document.projectName,
+    priority: document.priority,
     rigId: document.rigId,
     pose: Object.fromEntries(
       Object.entries(document.pose).map(([jointId, jointPose]) => [
@@ -133,10 +149,22 @@ function documentsEqual(left: EditorDocument, right: EditorDocument): boolean {
 function documentFromState(
   state: Pick<
     EditorStoreState,
-    "rigId" | "pose" | "tracks" | "fps" | "durationFrames" | "loop" | "markers"
+    | "rigId"
+    | "pose"
+    | "tracks"
+    | "fps"
+    | "durationFrames"
+    | "loop"
+    | "markers"
+    | "projectId"
+    | "projectName"
+    | "priority"
   >,
 ): EditorDocument {
   return {
+    projectId: state.projectId,
+    projectName: state.projectName,
+    priority: state.priority,
     rigId: state.rigId,
     pose: state.pose,
     tracks: state.tracks,
@@ -149,6 +177,9 @@ function documentFromState(
 
 function stateForDocument(document: EditorDocument) {
   return {
+    projectId: document.projectId,
+    projectName: document.projectName,
+    priority: document.priority,
     rigId: document.rigId,
     pose: document.pose,
     tracks: document.tracks,
@@ -231,6 +262,9 @@ function stateWithDocument(
 
 export function createEditorStore(initialRigId: RigId = "R15") {
   const initialDocument = snapshotDocument({
+    projectId: createProjectId(),
+    projectName: "Untitled",
+    priority: "Action",
     rigId: initialRigId,
     pose: createBindPose(rigs[initialRigId]),
     tracks: {},
@@ -242,6 +276,7 @@ export function createEditorStore(initialRigId: RigId = "R15") {
 
   return createStore<EditorStoreState>()((set, get) => ({
     ...initialDocument,
+    filePath: null,
     selectedJointId: rigs[initialRigId].rootId,
     selectedMarkerId: null,
     currentFrame: DEFAULT_FRAME,
@@ -320,6 +355,74 @@ export function createEditorStore(initialRigId: RigId = "R15") {
       get().execute({ type: "add-marker", marker });
       set({ selectedMarkerId: marker.id });
       return marker.id;
+    },
+
+    renameProject(name) {
+      get().execute({ type: "set-project-name", name });
+    },
+
+    newProject(rigId = "R15") {
+      const document = snapshotDocument({
+        projectId: createProjectId(),
+        projectName: "Untitled",
+        priority: "Action",
+        rigId,
+        pose: createBindPose(rigs[rigId]),
+        tracks: {},
+        fps: DEFAULT_FPS,
+        durationFrames: DEFAULT_DURATION,
+        loop: false,
+        markers: [],
+      });
+      set({
+        ...stateForDocument(document),
+        filePath: null,
+        selectedJointId: rigs[rigId].rootId,
+        selectedMarkerId: null,
+        currentFrame: 0,
+        isPlaying: false,
+        history: emptyHistory(),
+        transaction: null,
+        savedDocument: document,
+        isDirty: false,
+        canUndo: false,
+        canRedo: false,
+      });
+    },
+
+    loadProject(project, path) {
+      const rigId = project.project.rig;
+      const pose = evaluateAnimationFrame(project.tracks, createBindPose(rigs[rigId]), 0);
+      const document = snapshotDocument({
+        projectId: project.project.id,
+        projectName: project.project.name,
+        priority: project.project.priority,
+        rigId,
+        pose,
+        tracks: project.tracks,
+        fps: project.project.fps,
+        durationFrames: project.project.durationFrames,
+        loop: project.project.loop,
+        markers: project.markers,
+      });
+      set({
+        ...stateForDocument(document),
+        filePath: path,
+        selectedJointId: rigs[rigId].rootId,
+        selectedMarkerId: null,
+        currentFrame: 0,
+        isPlaying: false,
+        history: emptyHistory(),
+        transaction: null,
+        savedDocument: document,
+        isDirty: false,
+        canUndo: false,
+        canRedo: false,
+      });
+    },
+
+    setFilePath(path) {
+      set({ filePath: path });
     },
 
     setCurrentFrame(frame) {

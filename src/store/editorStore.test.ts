@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { quaternionFromEulerXYZ } from "../core/math/quaternion";
 import { createEditorStore } from "./editorStore";
+import { parseRbanimProjectV1 } from "../core/project/rbanim";
 
 describe("editor store commands and history", () => {
   it("undoes and redoes a joint transform as one semantic command", () => {
@@ -382,5 +383,46 @@ describe("editor store commands and history", () => {
     expect(store.getState().markers[0].frame).toBe(18);
     store.getState().redo();
     expect(store.getState().markers).toEqual([]);
+  });
+
+  it("loads a validated project, keeps its marker, and creates a clean new project", () => {
+    const project = parseRbanimProjectV1(
+      JSON.stringify({
+        schemaVersion: 1,
+        app: { name: "Roblox Animator Desktop", createdWith: "0.1.0" },
+        project: {
+          id: "saved-project",
+          name: "ThrowRock",
+          rig: "R6",
+          fps: 30,
+          durationFrames: 22,
+          loop: false,
+          priority: "Action",
+        },
+        tracks: {},
+        markers: [{ id: "throw", frame: 16, name: "THROW" }],
+      }),
+    );
+    const store = createEditorStore();
+    store.getState().loadProject(project, "throw-rock.rbanim");
+    expect(store.getState().projectName).toBe("ThrowRock");
+    expect(store.getState().rigId).toBe("R6");
+    expect(store.getState().filePath).toBe("throw-rock.rbanim");
+    expect(store.getState().markers).toEqual(project.markers);
+    expect(store.getState().isDirty).toBe(false);
+    store.getState().selectMarker("throw");
+    expect(store.getState().currentFrame).toBe(16);
+
+    store.getState().renameProject("A different name");
+    expect(store.getState().isDirty).toBe(true);
+    store.getState().undo();
+    expect(store.getState().projectName).toBe("ThrowRock");
+    expect(store.getState().isDirty).toBe(false);
+    store.getState().newProject("R15");
+    expect(store.getState().projectName).toBe("Untitled");
+    expect(store.getState().rigId).toBe("R15");
+    expect(store.getState().filePath).toBeNull();
+    expect(store.getState().markers).toEqual([]);
+    expect(store.getState().isDirty).toBe(false);
   });
 });

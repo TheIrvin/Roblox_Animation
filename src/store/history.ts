@@ -1,10 +1,13 @@
 import type { RigPose } from "../core/rigs/pose";
 import type { RigId } from "../core/rigs/types";
+import type { AnimationPriority } from "../core/project/rbanim";
 import type { AnimationTracks } from "../core/animation/keyframes";
 import type { AnimationMarker } from "../core/animation/markers";
 
 /** The editable document state captured by an undoable command. */
 export interface EditorDocument {
+  readonly projectId: string;
+  readonly projectName: string;
   readonly rigId: RigId;
   readonly pose: RigPose;
   readonly tracks: AnimationTracks;
@@ -12,6 +15,7 @@ export interface EditorDocument {
   readonly durationFrames: number;
   readonly loop: boolean;
   readonly markers: readonly AnimationMarker[];
+  readonly priority: AnimationPriority;
 }
 
 /** One semantic edit, stored as immutable before/after document snapshots. */

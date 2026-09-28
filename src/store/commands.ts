@@ -65,7 +65,8 @@ export type EditorCommand =
   | { readonly type: "add-marker"; readonly marker: AnimationMarker }
   | { readonly type: "rename-marker"; readonly markerId: string; readonly name: string }
   | { readonly type: "move-marker"; readonly markerId: string; readonly frame: number }
-  | { readonly type: "delete-marker"; readonly markerId: string };
+  | { readonly type: "delete-marker"; readonly markerId: string }
+  | { readonly type: "set-project-name"; readonly name: string };
 
 export function commandLabel(command: EditorCommand): string {
   switch (command.type) {
@@ -107,6 +108,8 @@ export function commandLabel(command: EditorCommand): string {
       return `Move marker to ${command.frame}`;
     case "delete-marker":
       return "Delete marker";
+    case "set-project-name":
+      return "Rename project";
   }
 }
 
@@ -288,5 +291,12 @@ export function applyEditorCommand(
         ...document,
         markers: deleteMarker(document.markers, command.markerId),
       };
+    case "set-project-name": {
+      const name = command.name.trim();
+      if (!name) throw new RangeError("Project name cannot be empty.");
+      if (name.length > 120)
+        throw new RangeError("Project name cannot exceed 120 characters.");
+      return { ...document, projectName: name };
+    }
   }
 }

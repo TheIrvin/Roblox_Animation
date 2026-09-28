@@ -71,6 +71,38 @@ button {
   font-size: 13px;
   font-weight: 650;
 }
+.file-controls {
+  display: flex;
+  gap: 3px;
+  margin-left: 8px;
+}
+.file-controls button {
+  height: 27px;
+  border: 1px solid #343844;
+  border-radius: 5px;
+  background: #20232b;
+  padding: 0 7px;
+  color: #c3cad6;
+  cursor: pointer;
+  font-size: 9px;
+}
+.project-name-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #8e96a6;
+  font-size: 9px;
+}
+.project-name-control input {
+  width: 108px;
+  height: 27px;
+  border: 1px solid #343844;
+  border-radius: 5px;
+  background: #20232b;
+  padding: 0 6px;
+  color: #e2e6ee;
+  font-size: 10px;
+}
 .history-controls {
   display: flex;
   gap: 4px;

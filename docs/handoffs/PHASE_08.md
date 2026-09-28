@@ -1,7 +1,7 @@
 # Phase 8 Handoff
 
 ## Status
-IN_PROGRESS — marker data and editing are implemented; the save/reopen acceptance gate depends on Phase 9 persistence.
+PASSED
 
 ## Scope completed
 
@@ -34,9 +34,9 @@ IN_PROGRESS — marker data and editing are implemented; the save/reopen accepta
 
 ## Known limitations
 
-- The app does not yet save or reopen `.rbanim` files. Phase 9 owns project serialization and file dialogs; Phase 8 remains open until markers survive that roundtrip.
+- The marker save/reopen gate passed through the V1 serializer/store loader and the Rust atomic file roundtrip added in Phase 9.
 - Vite reports the large JavaScript chunk advisory; Rust's Windows linker emits its localized test warning.
 
 ## Suggested next action
 
-Implement Phase 9 project validation, serialization/parser, and native open/save. Then verify marker save/reopen and close the Phase 8 gate.
+Begin Phase 10 export normalization.

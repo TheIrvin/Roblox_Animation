@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useStore } from "zustand";
 import type { StoreApi } from "zustand/vanilla";
+import { invoke } from "@tauri-apps/api/core";
+import { open as openDialog, save as saveDialog } from "@tauri-apps/plugin-dialog";
 import {
   eulerXYZFromQuaternion,
   quaternionFromEulerXYZ,
@@ -10,6 +12,12 @@ import { R6_RIG } from "./core/rigs/r6";
 import { R15_RIG } from "./core/rigs/r15";
 import type { RigDefinition, RigId, RigJointDefinition } from "./core/rigs/types";
 import type { Vec3 } from "./core/math/types";
+import {
+  parseRbanimProjectV1,
+  projectFromEditorDocument,
+  serializeRbanimProjectV1,
+  isPoseRepresentedByTracks,
+} from "./core/project/rbanim";
 import { Viewport } from "./components/viewport/Viewport";
 import { editorStore, type EditorStoreState } from "./store/editorStore";
 import "./App.css";
@@ -18,6 +26,8 @@ const RIGS: Record<RigId, RigDefinition> = { R6: R6_RIG, R15: R15_RIG };
 
 export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState> }) {
   const rigId = useStore(store, (state) => state.rigId);
+  const projectName = useStore(store, (state) => state.projectName);
+  const filePath = useStore(store, (state) => state.filePath);
   const rig = RIGS[rigId];
   const pose = useStore(store, (state) => state.pose);
   const selectedJointId = useStore(store, (state) => state.selectedJointId);
@@ -39,6 +49,11 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   const execute = useStore(store, (state) => state.execute);
   const selectJoint = useStore(store, (state) => state.selectJoint);
   const setCurrentFrame = useStore(store, (state) => state.setCurrentFrame);
+  const newProject = useStore(store, (state) => state.newProject);
+  const loadProject = useStore(store, (state) => state.loadProject);
+  const renameProject = useStore(store, (state) => state.renameProject);
+  const setFilePath = useStore(store, (state) => state.setFilePath);
+  const markSaved = useStore(store, (state) => state.markSaved);
   const setAutoKey = useStore(store, (state) => state.setAutoKey);
   const setDuration = useStore(store, (state) => state.setDuration);
   const setFps = useStore(store, (state) => state.setFps);
@@ -135,6 +150,99 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
     }
   };
 
+  const saveProjectTo = async (path: string) => {
+    let document = store.getState();
+    if (document.isPlaying) {
+      document.pause();
+      document.setCurrentFrame(Math.round(document.currentFrame));
+      document = store.getState();
+    }
+    if (
+      !isPoseRepresentedByTracks(
+        document.rigId,
+        document.tracks,
+        document.pose,
+        document.currentFrame,
+      )
+    )
+      throw new RangeError("Agrega un keyframe a la pose actual antes de guardar.");
+    const project = projectFromEditorDocument(document);
+    await invoke("save_project_file", {
+      path: path.toLowerCase().endsWith(".rbanim") ? path : `${path}.rbanim`,
+      contents: serializeRbanimProjectV1(project),
+    });
+    const normalizedPath = path.toLowerCase().endsWith(".rbanim")
+      ? path
+      : `${path}.rbanim`;
+    setFilePath(normalizedPath);
+    markSaved();
+    setTimelineError("");
+  };
+
+  const saveProjectAs = async () => {
+    try {
+      const safeName = projectName.replace(/[<>:"/\\|?*]/g, "_");
+      const path = await saveDialog({
+        defaultPath: `${safeName}.rbanim`,
+        filters: [{ name: "Roblox Animation Project", extensions: ["rbanim"] }],
+      });
+      if (path) await saveProjectTo(path);
+    } catch (error) {
+      setTimelineError(
+        error instanceof Error ? error.message : "No se pudo guardar el proyecto.",
+      );
+    }
+  };
+
+  const saveProject = async () => {
+    if (!filePath) return saveProjectAs();
+    try {
+      await saveProjectTo(filePath);
+    } catch (error) {
+      setTimelineError(
+        error instanceof Error ? error.message : "No se pudo guardar el proyecto.",
+      );
+    }
+  };
+
+  const openProject = async () => {
+    try {
+      const path = await openDialog({
+        multiple: false,
+        filters: [{ name: "Roblox Animation Project", extensions: ["rbanim"] }],
+      });
+      if (!path || Array.isArray(path)) return;
+      const contents = await invoke<string>("load_project_file", { path });
+      loadProject(parseRbanimProjectV1(contents), path);
+      setTimelineError("");
+    } catch (error) {
+      setTimelineError(
+        error instanceof Error ? error.message : "No se pudo abrir el proyecto.",
+      );
+    }
+  };
+
+  const createProject = () => {
+    if (
+      isDirty &&
+      !window.confirm("Hay cambios sin guardar. ¿Crear una animación nueva?")
+    )
+      return;
+    newProject(rigId);
+    setTimelineError("");
+  };
+
+  const renameCurrentProject = (name: string) => {
+    try {
+      renameProject(name);
+      setTimelineError("");
+    } catch (error) {
+      setTimelineError(
+        error instanceof Error ? error.message : "Nombre de proyecto inválido.",
+      );
+    }
+  };
+
   const handleRotate = (
     jointId: string,
     localRotation: [number, number, number, number],
@@ -194,6 +302,30 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
           R
         </span>
         <span className="brand-name">Roblox Animator Desktop</span>
+        <div className="file-controls" aria-label="Project files">
+          <button aria-label="New project" onClick={createProject}>
+            New
+          </button>
+          <button aria-label="Open project" onClick={openProject}>
+            Open
+          </button>
+          <button aria-label="Save project" onClick={saveProject}>
+            Save
+          </button>
+          <button aria-label="Save project as" onClick={saveProjectAs}>
+            Save As
+          </button>
+        </div>
+        <label className="project-name-control">
+          <span>Project</span>
+          <input
+            key={projectName}
+            aria-label="Project name"
+            defaultValue={projectName}
+            maxLength={120}
+            onBlur={(event) => renameCurrentProject(event.target.value)}
+          />
+        </label>
         <div className="history-controls" aria-label="Historial">
           <button aria-label="Undo" disabled={!canUndo} onClick={undo}>
             Undo

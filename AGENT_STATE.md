@@ -13,7 +13,7 @@ Status: IN_PROGRESS
 - Phase 5: PASSED
 - Phase 6: PASSED
 - Phase 7: PASSED
-- Phase 8: IN_PROGRESS
+- Phase 8: PASSED
 - Phase 9: IN_PROGRESS
 - Phase 10: NOT_STARTED
 - Phase 11: NOT_STARTED
@@ -25,10 +25,10 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`e02df18` — Phase 8 marker editing and full verification passed; Phase 8's file save/reopen gate is being closed as Phase 9 adds persistence.
+`ef93b12` — Phase 9 is verified in the working tree (`npm run verify` passed) and ready for review; its Rust/TypeScript roundtrip closes Phase 8.
 
 ## Blocking issues
-Phase 8 gate awaits Phase 9 `.rbanim` save/reopen. Marker model, history, validation, UI, and full verification are complete.
+None. Phase 8 markers survive the `.rbanim` save/reopen path. Phase 9 full verification also passed.
 
 ## Next required action
-Implement Phase 9 project validation, `.rbanim` serialization/parser, Rust open/save, safe writes, and native file dialogs. Preserve markers through save and reopen to close Phase 8's gate.
+Review Phase 9 handoff and full verification, then mark it PASSED before starting Phase 10 export normalization.
