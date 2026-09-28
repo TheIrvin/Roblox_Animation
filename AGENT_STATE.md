@@ -1,6 +1,6 @@
 # Agent State
 
-Current phase: 6
+Current phase: 7
 Status: IN_PROGRESS
 
 ## Phases
@@ -11,7 +11,8 @@ Status: IN_PROGRESS
 - Phase 3: PASSED
 - Phase 4: PASSED
 - Phase 5: PASSED
-- Phase 6: IN_PROGRESS
+- Phase 6: PASSED
+- Phase 7: IN_PROGRESS
 - Phase 7: NOT_STARTED
 - Phase 8: NOT_STARTED
 - Phase 9: NOT_STARTED
@@ -25,10 +26,10 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`8d7816b` — Phase 6 started; implementation now has a full verification pass and is ready for review.
+`9c789fc` — Phase 6 evaluator, playback, and 51-test verification passed.
 
 ## Blocking issues
-Phase 6 implementation is ready for review. Full verification passed with the preliminary R15 ThrowRock evaluator fixture.
+None. Phase 6 playback and sparse track interpolation passed full verification.
 
 ## Next required action
-Review Phase 6 handoff and full verification, then mark it PASSED before starting Phase 7 pose tools.
+Implement Phase 7 pose tools: copy/paste pose, copy/paste joint, mirror pose, reset pose, and reset joint. Preserve undo/redo and validate R6/R15 joint pair mappings.
