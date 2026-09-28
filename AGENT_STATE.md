@@ -1,14 +1,14 @@
 # Agent State
 
-Current phase: 2
-Status: PASSED
+Current phase: 3
+Status: IN_PROGRESS
 
 ## Phases
 
 - Phase 0: PASSED
 - Phase 1: PASSED
 - Phase 2: PASSED
-- Phase 3: NOT_STARTED
+- Phase 3: IN_PROGRESS
 - Phase 4: NOT_STARTED
 - Phase 5: NOT_STARTED
 - Phase 6: NOT_STARTED
@@ -25,10 +25,10 @@ Status: PASSED
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`b18c9e1` — Phase 2 definitions reviewed independently; full verification passed. R6/R15 Studio name comparison recorded.
+`3174720` — Phase 2 passed after independent verification and R6/R15 Studio name comparison.
 
 ## Blocking issues
 None. Primitive dimensions and offsets will be reviewed in the Phase 3 viewport.
 
 ## Next required action
-Start Phase 3: implement the 3D viewport for the approved R6/R15 rig definitions.
+Implement Phase 3 viewport, rig rendering, selection, rotation gizmo, and inspector basics.
