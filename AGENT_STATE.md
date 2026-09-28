@@ -1,12 +1,12 @@
 # Agent State
 
 Current phase: 1
-Status: IN_PROGRESS
+Status: READY_FOR_REVIEW
 
 ## Phases
 
 - Phase 0: PASSED
-- Phase 1: IN_PROGRESS
+- Phase 1: READY_FOR_REVIEW
 - Phase 2: NOT_STARTED
 - Phase 3: NOT_STARTED
 - Phase 4: NOT_STARTED
@@ -31,4 +31,4 @@ Status: IN_PROGRESS
 None. Roblox Studio is installed; Phase 2 rig comparison in Studio remains a required check.
 
 ## Next required action
-Implement and verify the standalone core transforms and easing math; do not begin Phase 2.
+Review the Phase 1 math core and its handoff. Do not begin Phase 2 until Phase 1 is marked PASSED.
