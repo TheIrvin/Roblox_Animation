@@ -350,4 +350,37 @@ describe("editor store commands and history", () => {
     store.getState().redo();
     expect(store.getState().pose[rightJoint].rotation).not.toEqual([0, 0, 0, 1]);
   });
+
+  it("creates the ThrowRock marker, edits it, and preserves marker history", () => {
+    const store = createEditorStore();
+    const markerId = store.getState().addMarker("THROW", 16);
+    expect(store.getState().markers).toEqual([
+      { id: markerId, frame: 16, name: "THROW" },
+    ]);
+    store.getState().markSaved();
+    expect(JSON.parse(JSON.stringify(store.getState().savedDocument.markers))).toEqual([
+      { id: markerId, frame: 16, name: "THROW" },
+    ]);
+    store.getState().selectMarker(markerId);
+    expect(store.getState().currentFrame).toBe(16);
+    expect(() => store.getState().setDuration(15)).toThrow(RangeError);
+
+    store.getState().execute({
+      type: "rename-marker",
+      markerId,
+      name: "RELEASE",
+    });
+    store.getState().execute({ type: "move-marker", markerId, frame: 18 });
+    expect(store.getState().markers[0]).toMatchObject({
+      id: markerId,
+      frame: 18,
+      name: "RELEASE",
+    });
+    store.getState().execute({ type: "delete-marker", markerId });
+    expect(store.getState().markers).toEqual([]);
+    store.getState().undo();
+    expect(store.getState().markers[0].frame).toBe(18);
+    store.getState().redo();
+    expect(store.getState().markers).toEqual([]);
+  });
 });

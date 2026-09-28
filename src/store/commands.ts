@@ -17,6 +17,13 @@ import {
   type JointKeyframe,
 } from "../core/animation/keyframes";
 import type { EditorDocument } from "./history";
+import {
+  addMarker,
+  deleteMarker,
+  moveMarker,
+  renameMarker,
+  type AnimationMarker,
+} from "../core/animation/markers";
 
 const rigs = { R6: R6_RIG, R15: R15_RIG } as const;
 
@@ -54,7 +61,11 @@ export type EditorCommand =
   | { readonly type: "set-loop"; readonly loop: boolean }
   | { readonly type: "paste-pose"; readonly pose: RigPose }
   | { readonly type: "paste-joint"; readonly jointId: string; readonly pose: JointPose }
-  | { readonly type: "mirror-pose" };
+  | { readonly type: "mirror-pose" }
+  | { readonly type: "add-marker"; readonly marker: AnimationMarker }
+  | { readonly type: "rename-marker"; readonly markerId: string; readonly name: string }
+  | { readonly type: "move-marker"; readonly markerId: string; readonly frame: number }
+  | { readonly type: "delete-marker"; readonly markerId: string };
 
 export function commandLabel(command: EditorCommand): string {
   switch (command.type) {
@@ -88,6 +99,14 @@ export function commandLabel(command: EditorCommand): string {
       return `Paste ${command.jointId} pose`;
     case "mirror-pose":
       return "Mirror pose";
+    case "add-marker":
+      return `Add marker ${command.marker.name}`;
+    case "rename-marker":
+      return `Rename marker ${command.name}`;
+    case "move-marker":
+      return `Move marker to ${command.frame}`;
+    case "delete-marker":
+      return "Delete marker";
   }
 }
 
@@ -188,10 +207,14 @@ export function applyEditorCommand(
     case "set-duration": {
       if (!Number.isSafeInteger(command.durationFrames) || command.durationFrames < 1)
         throw new RangeError("Duration must be a positive integer.");
-      const maxFrame = Object.values(document.tracks).reduce(
+      const maxKeyframe = Object.values(document.tracks).reduce(
         (maximum, track) =>
           Math.max(maximum, ...track.keyframes.map((keyframe) => keyframe.frame)),
         0,
+      );
+      const maxFrame = Math.max(
+        maxKeyframe,
+        ...document.markers.map((marker) => marker.frame),
       );
       if (command.durationFrames < maxFrame)
         throw new RangeError(`Duration cannot be shorter than frame ${maxFrame}.`);
@@ -239,6 +262,31 @@ export function applyEditorCommand(
       return {
         ...document,
         pose: mirrorRigPose(rigs[document.rigId], document.pose),
+      };
+    case "add-marker":
+      return {
+        ...document,
+        markers: addMarker(document.markers, command.marker, document.durationFrames),
+      };
+    case "rename-marker":
+      return {
+        ...document,
+        markers: renameMarker(document.markers, command.markerId, command.name),
+      };
+    case "move-marker":
+      return {
+        ...document,
+        markers: moveMarker(
+          document.markers,
+          command.markerId,
+          command.frame,
+          document.durationFrames,
+        ),
+      };
+    case "delete-marker":
+      return {
+        ...document,
+        markers: deleteMarker(document.markers, command.markerId),
       };
   }
 }

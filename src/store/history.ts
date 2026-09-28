@@ -1,6 +1,7 @@
 import type { RigPose } from "../core/rigs/pose";
 import type { RigId } from "../core/rigs/types";
 import type { AnimationTracks } from "../core/animation/keyframes";
+import type { AnimationMarker } from "../core/animation/markers";
 
 /** The editable document state captured by an undoable command. */
 export interface EditorDocument {
@@ -10,6 +11,7 @@ export interface EditorDocument {
   readonly fps: number;
   readonly durationFrames: number;
   readonly loop: boolean;
+  readonly markers: readonly AnimationMarker[];
 }
 
 /** One semantic edit, stored as immutable before/after document snapshots. */

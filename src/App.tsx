@@ -31,6 +31,8 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   const loop = useStore(store, (state) => state.loop);
   const copiedPose = useStore(store, (state) => state.copiedPose);
   const copiedJoint = useStore(store, (state) => state.copiedJoint);
+  const markers = useStore(store, (state) => state.markers);
+  const selectedMarkerId = useStore(store, (state) => state.selectedMarkerId);
   const isDirty = useStore(store, (state) => state.isDirty);
   const canUndo = useStore(store, (state) => state.canUndo);
   const canRedo = useStore(store, (state) => state.canRedo);
@@ -49,6 +51,8 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   const pastePose = useStore(store, (state) => state.pastePose);
   const copyJoint = useStore(store, (state) => state.copyJoint);
   const pasteJoint = useStore(store, (state) => state.pasteJoint);
+  const addMarker = useStore(store, (state) => state.addMarker);
+  const selectMarker = useStore(store, (state) => state.selectMarker);
   const copyKeyframe = useStore(store, (state) => state.copyKeyframe);
   const beginTransformTransaction = useStore(
     store,
@@ -63,7 +67,9 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   const selectedKeyframe = selectedTrack?.keyframes.find(
     (keyframe) => keyframe.frame === currentFrame,
   );
+  const selectedMarker = markers.find((marker) => marker.id === selectedMarkerId);
   const [timelineError, setTimelineError] = useState("");
+  const [markerName, setMarkerName] = useState("THROW");
   const draggedMarker = useRef(false);
 
   useEffect(() => {
@@ -366,6 +372,49 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
           >
             Reset Pose
           </button>
+          <label className="marker-name-field">
+            <span>Event</span>
+            <input
+              aria-label="Marker name"
+              value={markerName}
+              maxLength={64}
+              onChange={(event) => setMarkerName(event.target.value)}
+            />
+          </label>
+          <button
+            className="timeline-button"
+            onClick={() => runPoseAction(() => addMarker(markerName))}
+          >
+            + Marker
+          </button>
+          <button
+            className="timeline-button"
+            disabled={!selectedMarker}
+            onClick={() =>
+              selectedMarker &&
+              runTimelineCommand({
+                type: "rename-marker",
+                markerId: selectedMarker.id,
+                name: markerName,
+              })
+            }
+          >
+            Rename
+          </button>
+          <button
+            className="timeline-button"
+            disabled={!selectedMarker}
+            onClick={() => {
+              if (!selectedMarker) return;
+              runTimelineCommand({
+                type: "delete-marker",
+                markerId: selectedMarker.id,
+              });
+              selectMarker(null);
+            }}
+          >
+            Delete Marker
+          </button>
           <button
             className="timeline-button primary"
             aria-label="Add keyframe"
@@ -485,6 +534,54 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
           </span>
         </div>
         <div className="timeline-tracks" aria-label="Keyframe tracks">
+          <div className="timeline-track marker-track">
+            <span className="timeline-track-name">Events</span>
+            <div className="track-lane marker-lane">
+              {markers.map((marker) => (
+                <button
+                  key={marker.id}
+                  className={`event-marker${marker.id === selectedMarkerId ? " selected" : ""}`}
+                  aria-label={`Marker ${marker.name} frame ${marker.frame}`}
+                  title={`${marker.name} · frame ${marker.frame}`}
+                  style={{ left: `${(marker.frame / durationFrames) * 100}%` }}
+                  onClick={() => {
+                    selectMarker(marker.id);
+                    setMarkerName(marker.name);
+                  }}
+                  onPointerDown={(event) => {
+                    if (event.button === 0)
+                      event.currentTarget.setPointerCapture(event.pointerId);
+                  }}
+                  onPointerUp={(event) => {
+                    if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
+                    event.currentTarget.releasePointerCapture(event.pointerId);
+                    const lane = event.currentTarget.parentElement;
+                    if (!lane) return;
+                    const rect = lane.getBoundingClientRect();
+                    const frame = Math.max(
+                      0,
+                      Math.min(
+                        durationFrames,
+                        Math.round(
+                          ((event.clientX - rect.left) / rect.width) * durationFrames,
+                        ),
+                      ),
+                    );
+                    if (frame !== marker.frame) {
+                      runTimelineCommand({
+                        type: "move-marker",
+                        markerId: marker.id,
+                        frame,
+                      });
+                      setCurrentFrame(frame);
+                    }
+                  }}
+                >
+                  ▼ {marker.name}
+                </button>
+              ))}
+            </div>
+          </div>
           {rig.joints
             .filter((joint) => tracks[joint.id]?.keyframes.length)
             .map((joint) => (

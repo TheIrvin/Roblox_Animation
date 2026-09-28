@@ -197,6 +197,23 @@ button {
   color: #e3e7f0;
   font-size: 9px;
 }
+.marker-name-field {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #aab2c0;
+  font-size: 9px;
+}
+.marker-name-field input {
+  width: 75px;
+  height: 24px;
+  border: 1px solid #343844;
+  border-radius: 4px;
+  background: #20232b;
+  padding: 0 5px;
+  color: #e3e7f0;
+  font-size: 9px;
+}
 .timeline-time {
   margin-left: auto;
   color: #8892a4;
@@ -267,6 +284,31 @@ button {
   border-color: #fff0b8;
   background: #ffd36e;
   box-shadow: 0 0 7px #f2c05c99;
+}
+.marker-track {
+  background: #1b1e26;
+}
+.event-marker {
+  position: absolute;
+  top: 50%;
+  max-width: 130px;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  border: 1px solid #806946;
+  border-radius: 4px;
+  background: #382f22;
+  padding: 2px 5px;
+  color: #eacb8f;
+  cursor: grab;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  touch-action: none;
+}
+.event-marker.selected {
+  border-color: #d7ad5e;
+  background: #594629;
+  color: #fff0c8;
 }
 .timeline-empty {
   padding: 12px 14px;

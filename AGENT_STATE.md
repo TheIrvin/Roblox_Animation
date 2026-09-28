@@ -25,10 +25,10 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`6bed800` — Phase 7 pose tools passed full verification, R6/R15 mirror tests, and UI smoke.
+`6bed800` — Phase 7 pose tools passed full verification, R6/R15 mirror tests, and UI smoke. Phase 8 marker editing also passes full verification; save/reopen acceptance awaits Phase 9.
 
 ## Blocking issues
-None. Phase 7 pose tools, mirror, clipboard, and history passed full verification.
+Phase 8 save/reopen acceptance cannot be exercised until Phase 9 adds `.rbanim` persistence. Marker model, history, validation, UI, and full verification are complete.
 
 ## Next required action
-Implement Phase 8 event markers: create, rename, move, delete, validation, timeline lane, and ThrowRock `THROW` at frame 16. Preserve markers in history and the later `.rbanim` project model.
+Implement Phase 9 project validation, `.rbanim` serialization/parser, Rust open/save, and file dialogs. Then reopen a saved marker project to close Phase 8's gate.

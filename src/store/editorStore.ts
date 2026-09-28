@@ -9,6 +9,7 @@ import {
   upsertKeyframe,
   type JointKeyframe,
 } from "../core/animation/keyframes";
+import type { AnimationMarker } from "../core/animation/markers";
 import { applyEditorCommand, commandLabel, type EditorCommand } from "./commands";
 import {
   emptyHistory,
@@ -24,6 +25,12 @@ const rigs = { R6: R6_RIG, R15: R15_RIG } as const;
 const DEFAULT_FRAME = 0;
 const DEFAULT_FPS = 30;
 const DEFAULT_DURATION = 22;
+let markerIdCounter = 0;
+
+function newMarkerId(): string {
+  markerIdCounter += 1;
+  return globalThis.crypto?.randomUUID?.() ?? `marker-${Date.now()}-${markerIdCounter}`;
+}
 
 interface Transaction {
   readonly label: string;
@@ -37,7 +44,9 @@ export interface EditorStoreState {
   readonly fps: number;
   readonly durationFrames: number;
   readonly loop: boolean;
+  readonly markers: EditorDocument["markers"];
   readonly selectedJointId: string | null;
+  readonly selectedMarkerId: string | null;
   readonly currentFrame: number;
   readonly isPlaying: boolean;
   readonly autoKey: boolean;
@@ -57,6 +66,8 @@ export interface EditorStoreState {
   setDuration: (durationFrames: number) => void;
   setFps: (fps: number) => void;
   setLoop: (loop: boolean) => void;
+  selectMarker: (markerId: string | null) => void;
+  addMarker: (name: string, frame?: number, value?: string) => string;
   play: () => void;
   pause: () => void;
   stop: () => void;
@@ -111,6 +122,7 @@ function snapshotDocument(document: EditorDocument): EditorDocument {
     fps: document.fps,
     durationFrames: document.durationFrames,
     loop: document.loop,
+    markers: document.markers.map((marker) => ({ ...marker })),
   };
 }
 
@@ -121,7 +133,7 @@ function documentsEqual(left: EditorDocument, right: EditorDocument): boolean {
 function documentFromState(
   state: Pick<
     EditorStoreState,
-    "rigId" | "pose" | "tracks" | "fps" | "durationFrames" | "loop"
+    "rigId" | "pose" | "tracks" | "fps" | "durationFrames" | "loop" | "markers"
   >,
 ): EditorDocument {
   return {
@@ -131,6 +143,7 @@ function documentFromState(
     fps: state.fps,
     durationFrames: state.durationFrames,
     loop: state.loop,
+    markers: state.markers,
   };
 }
 
@@ -142,6 +155,7 @@ function stateForDocument(document: EditorDocument) {
     fps: document.fps,
     durationFrames: document.durationFrames,
     loop: document.loop,
+    markers: document.markers,
   };
 }
 
@@ -223,11 +237,13 @@ export function createEditorStore(initialRigId: RigId = "R15") {
     fps: DEFAULT_FPS,
     durationFrames: DEFAULT_DURATION,
     loop: false,
+    markers: [],
   });
 
   return createStore<EditorStoreState>()((set, get) => ({
     ...initialDocument,
     selectedJointId: rigs[initialRigId].rootId,
+    selectedMarkerId: null,
     currentFrame: DEFAULT_FRAME,
     isPlaying: false,
     autoKey: true,
@@ -269,6 +285,7 @@ export function createEditorStore(initialRigId: RigId = "R15") {
           command.type === "change-rig"
             ? rigs[command.rigId].rootId
             : state.selectedJointId,
+        selectedMarkerId: command.type === "change-rig" ? null : state.selectedMarkerId,
       }));
     },
 
@@ -280,6 +297,29 @@ export function createEditorStore(initialRigId: RigId = "R15") {
       )
         throw new RangeError(`Unknown joint ${jointId} for ${state.rigId}.`);
       set({ selectedJointId: jointId });
+    },
+
+    selectMarker(markerId) {
+      const state = get();
+      if (markerId !== null && !state.markers.some((marker) => marker.id === markerId))
+        throw new RangeError(`Unknown marker ${markerId}.`);
+      set({ selectedMarkerId: markerId });
+      if (markerId !== null) {
+        const marker = state.markers.find((item) => item.id === markerId)!;
+        get().setCurrentFrame(marker.frame);
+      }
+    },
+
+    addMarker(name, frame = Math.round(get().currentFrame), value) {
+      const marker: AnimationMarker = {
+        id: newMarkerId(),
+        frame,
+        name,
+        ...(value === undefined ? {} : { value }),
+      };
+      get().execute({ type: "add-marker", marker });
+      set({ selectedMarkerId: marker.id });
+      return marker.id;
     },
 
     setCurrentFrame(frame) {
