@@ -71,6 +71,25 @@ button {
   font-size: 13px;
   font-weight: 650;
 }
+.history-controls {
+  display: flex;
+  gap: 4px;
+  margin-left: 12px;
+}
+.history-controls button {
+  height: 27px;
+  border: 1px solid #343844;
+  border-radius: 5px;
+  background: #20232b;
+  padding: 0 8px;
+  color: #c3cad6;
+  cursor: pointer;
+  font-size: 10px;
+}
+.history-controls button:disabled {
+  color: #555d6b;
+  cursor: default;
+}
 .rig-picker {
   display: flex;
   align-items: center;
@@ -327,6 +346,21 @@ button {
   padding: 0 12px;
   background: #17191f;
   color: #8992a2;
+  font-size: 9px;
+}
+.frame-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.frame-control input {
+  width: 56px;
+  height: 21px;
+  border: 1px solid #343844;
+  border-radius: 4px;
+  background: #20232b;
+  padding: 0 5px;
+  color: #dce0e9;
   font-size: 9px;
 }
 

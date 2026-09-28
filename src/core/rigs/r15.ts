@@ -12,9 +12,9 @@ const joints = [
     mirrorId: "HumanoidRootPart",
     editableRotation: true,
     editablePosition: true,
-    bindPosition: [0, 0, 0],
+    bindPosition: [0, 2, 0],
     bindRotation: identity,
-    visual: { shape: "box", size: [2, 2, 1], offset: [0, -0.5, 0] },
+    visual: { shape: "box", size: [2, 2, 1], offset: [0, 0, 0] },
   },
   {
     id: "LowerTorso",

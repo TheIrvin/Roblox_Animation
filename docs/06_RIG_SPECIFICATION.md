@@ -128,9 +128,9 @@ interface RigJointDefinition {
 
 # 6. Geometría visual
 
-V1 utiliza primitivas simples creadas por el proyecto.
+Las mallas de vista previa pueden usar los modelos GLTF proporcionados por el usuario. No descargar modelos externos sin instrucción del usuario. La pose editable siempre se representa con transforms de los joints internos; la malla solo proporciona geometría para el viewport.
 
-No descargar modelos externos.
+La vista usa las exportaciones de Roblox Studio aprobadas en ADR-008 de `DECISIONS.md`: humanoide para R6 y R15 Block para R15. El modelo se centra en el origen de animación y el suelo se sitúa en Y=0.
 
 Objetivo:
 - reconocer el cuerpo;
@@ -138,7 +138,7 @@ Objetivo:
 - animar con claridad;
 - carga rápida.
 
-No es necesario replicar exactamente la apariencia Roblox.
+La apariencia de la malla importada puede replicar el rig estándar de Roblox.
 
 La **jerarquía y nombres para exportación sí deben coincidir** con el rig objetivo.
 
@@ -174,6 +174,8 @@ La UI puede advertir rotaciones extremas en una versión posterior.
 Todas las definiciones deben tener:
 - bindPosition;
 - bindRotation normalizado.
+
+En los modelos de Studio usados por el viewport, el centro de `HumanoidRootPart` está a 2 studs del suelo (`Y = 0`). El bind root se representa como `[0, 2, 0]`; los offsets corporales se miden desde ese pivote.
 
 Los valores geométricos concretos deben validarse visualmente contra rigs estándar de Studio.
 

@@ -55,7 +55,7 @@ READY_FOR_REVIEW
 
 ## Known limitations
 
-- Rig geometry and offsets reuse Phase 2 primitive metadata; they remain intentionally approximate and should be visually reviewed against the Studio screenshots/standard rigs.
+- The original primitive preview described above has since been replaced by the user's Studio GLTF exports; see ADR-008. R6 and R15 now render the supplied models and use the canonical editable joint definitions.
 - R6/R15 switching resets the in-memory preview pose, which is expected before Phase 4 store/history.
 - No timeline, keyframes, playback, persistent store, undo, or redo were added.
 - The gizmo edits a local rotation and the inspector displays the corresponding local XYZ Euler values.
@@ -67,8 +67,8 @@ READY_FOR_REVIEW
 
 ## Risks for next phase
 
-- Visually assess the approximate limb/torso proportions and refine if needed while building the viewport out.
-- Phase 4 should route edits through its command/store layer while retaining the current pure pose functions and UI behavior.
+- Continue to verify viewport transforms against the GLTF joint pivots while connecting later timeline and pose tools.
+- Phase 4 routes edits through its command/store layer while retaining pure pose functions and UI behavior.
 
 ## Suggested next action
 

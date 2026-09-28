@@ -25,10 +25,10 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`053231d` — Phase 3 reviewed independently; full verification and manual R6/R15 arm smoke passed.
+`8f3730f` — Phase 3 reviewed independently; full verification and manual R6/R15 arm smoke passed.
 
 ## Blocking issues
-None. Phase 3 selection and rotation gate passed in the local viewport.
+None. The Phase 4 store and viewport model integration are awaiting final independent verification.
 
 ## Next required action
-Phase 3 is approved. Implement Phase 4 Zustand editor state, semantic commands, history, dirty state, selection, and current frame.
+Run the complete verification suite and review the Phase 4 handoff. Do not start Phase 5 until Phase 4 is marked PASSED.

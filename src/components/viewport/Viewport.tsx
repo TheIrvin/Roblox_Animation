@@ -5,7 +5,7 @@ import { Vector3 } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import type { RigPose } from "../../core/rigs/pose";
 import type { RigDefinition } from "../../core/rigs/types";
-import { RobloxRig } from "./RobloxRig";
+import ImportedRobloxRig from "./ImportedRobloxRig";
 
 interface ViewportProps {
   rig: RigDefinition;
@@ -13,6 +13,8 @@ interface ViewportProps {
   selectedJointId: string | null;
   onSelectJoint: (jointId: string | null) => void;
   onRotateJoint: (jointId: string, rotation: [number, number, number, number]) => void;
+  onBeginRotate: (jointId: string) => void;
+  onEndRotate: () => void;
   onClearSelection: () => void;
 }
 
@@ -22,6 +24,8 @@ export function Viewport({
   selectedJointId,
   onSelectJoint,
   onRotateJoint,
+  onBeginRotate,
+  onEndRotate,
   onClearSelection,
 }: ViewportProps) {
   const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -53,7 +57,7 @@ export function Viewport({
   return (
     <div className="viewport-canvas" aria-label="Viewport 3D">
       <Canvas
-        camera={{ position: [5, 3.8, -7], fov: 38, near: 0.1, far: 100 }}
+        camera={{ position: [6, 7.1, -8.4], fov: 38, near: 0.1, far: 100 }}
         dpr={[1, 1.5]}
         shadows
         onPointerMissed={(event) => {
@@ -63,20 +67,23 @@ export function Viewport({
         <color attach="background" args={["#171a21"]} />
         <ambientLight intensity={1.5} />
         <directionalLight position={[4, 8, -3]} intensity={2.3} castShadow />
-        <gridHelper args={[12, 24, "#363d4d", "#252a34"]} position={[0, -2.05, 0]} />
+        <gridHelper args={[12, 24, "#363d4d", "#252a34"]} position={[0, 0, 0]} />
         <Suspense fallback={null}>
-          <RobloxRig
+          <ImportedRobloxRig
             rig={rig}
             pose={pose}
             selectedJointId={selectedJointId}
             onSelectJoint={(jointId) => onSelectJoint(jointId)}
             onRotateJoint={onRotateJoint}
+            onBeginRotate={onBeginRotate}
+            onEndRotate={onEndRotate}
             onFocusJoint={focusTarget}
           />
         </Suspense>
         <OrbitControls
           ref={controlsRef}
           makeDefault
+          target={[0, 2.5, 0]}
           enableDamping
           enablePan
           enableZoom
