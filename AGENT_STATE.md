@@ -1,7 +1,7 @@
 # Agent State
 
-Current phase: 4
-Status: PASSED
+Current phase: 5
+Status: IN_PROGRESS
 
 ## Phases
 
@@ -10,7 +10,7 @@ Status: PASSED
 - Phase 2: PASSED
 - Phase 3: PASSED
 - Phase 4: PASSED
-- Phase 5: NOT_STARTED
+- Phase 5: IN_PROGRESS
 - Phase 6: NOT_STARTED
 - Phase 7: NOT_STARTED
 - Phase 8: NOT_STARTED
@@ -31,4 +31,4 @@ Status: PASSED
 None. Phase 4's store, undo/redo, and imported model viewport passed independent review.
 
 ## Next required action
-Begin Phase 5: timeline, keyframes, Auto Key, duration/FPS, and copy/paste keyframe.
+Implement Phase 5 timeline/keyframes only: sorted per-joint tracks, insertion/update, delete/move, Auto Key, duration/FPS, and copy/paste keyframe. Preserve Phase 4 history and the R6/R15 mesh mappings.
