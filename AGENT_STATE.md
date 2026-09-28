@@ -1,13 +1,13 @@
 # Agent State
 
 Current phase: 2
-Status: IN_PROGRESS
+Status: READY_FOR_REVIEW
 
 ## Phases
 
 - Phase 0: PASSED
 - Phase 1: PASSED
-- Phase 2: IN_PROGRESS
+- Phase 2: READY_FOR_REVIEW
 - Phase 3: NOT_STARTED
 - Phase 4: NOT_STARTED
 - Phase 5: NOT_STARTED
@@ -28,7 +28,7 @@ Status: IN_PROGRESS
 `b1d64a1` — Phase 1 math core reviewed independently; full verification passed.
 
 ## Blocking issues
-None. Roblox Studio is installed; Phase 2 rig comparison in Studio remains a required check.
+The required standard R6 and R15 Block generation/comparison in Roblox Studio remains unverified. Studio is installed and its process is responding, but this task's CUA runtime exposes no native-app inventory or control (`listWindows`/`listApps` are unavailable). The installed R6 mannequin thumbnail is not a Rig Builder rig and cannot satisfy this check.
 
 ## Next required action
-Implement and verify Phase 2 R6/R15 rig definitions; perform the Studio rig comparison before requesting review.
+Review Phase 2 definitions and tests, then generate standard R6 and R15 Block rigs in Studio and compare their part/joint hierarchy before marking the phase PASSED.
