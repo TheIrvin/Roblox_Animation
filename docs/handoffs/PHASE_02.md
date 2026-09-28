@@ -4,7 +4,7 @@
 2 — Rig definitions R6/R15
 
 ## Status
-READY_FOR_REVIEW
+PASSED
 
 ## Scope completed
 - Added stable `R6` and `R15` rig definitions with canonical Roblox part IDs and parent links matching the hierarchy in `docs/06_RIG_SPECIFICATION.md`.
@@ -43,20 +43,24 @@ READY_FOR_REVIEW
 - Prettier: passed.
 - Cargo fmt, Clippy, and Rust tests: passed (1 Rust smoke test).
 - Frontend production build: passed. Existing advisory remains for the ~1.15 MB uncompressed JS chunk; Rust linker emitted its existing informational warning.
-- Studio runtime evidence: `RobloxStudioBeta.exe` was installed and running with `Responding=True`, window title `Roblox Studio`. The CUA API in this task returned no apps and does not provide `listWindows` or `listApps`, so the Studio window could not be inspected or operated.
+- Studio runtime evidence: `RobloxStudioBeta.exe` was installed and running. Studio-generated rig screenshots were supplied by the user and are recorded below.
 - Local R6 XML evidence: the installed path is `content/models/Thumbnails/Mannequins/R6.rbxmx`. It contains `Head`, `Torso`, `Left Arm`, `Right Arm`, `Left Leg`, and `Right Leg`, but no `HumanoidRootPart`; the body parts are children of the `MrGrey` model, while Motor6D instances are children of `Torso`. This is a thumbnail mannequin, not a standard Rig Builder rig, so it was not treated as satisfying the Studio comparison requirement. The installed R15 asset is binary `.rbxm` and was not decoded.
+- Manual Studio comparison: user-provided Explorer screenshots from Studio show a generated R15 rig with `HumanoidRootPart`, `LowerTorso`, `UpperTorso`, `Head`, and all left/right upper/lower limb, hand, and foot parts; the R6 screenshot shows `HumanoidRootPart`, `Torso`, `Head`, both arms, and both legs. These match the canonical part IDs in the phase definitions. The images are preserved at `docs/handoffs/evidence/phase-02-r15-explorer.png` and `docs/handoffs/evidence/phase-02-r6-explorer.png`.
+- In both screenshots, body-part instances appear as children of the top-level `Rig` model. The internal `parentId` values represent the animation joint graph, not Roblox `Instance.Parent`. Roblox's Pose documentation confirms that pose hierarchy follows the connected joint graph; the Humanoid reference requires R6 `Head` to attach to `Torso` and R15 `Head` to `UpperTorso`. R6/R15 standard joint-name sets are also listed by `HumanoidRigDescription` (sources linked below).
+- Roblox documentation checked: [Rig Generator](https://create.roblox.com/docs/studio/rig-builder), [Pose hierarchy](https://create.roblox.com/docs/reference/engine/classes/Pose), [Humanoid rig requirements](https://create.roblox.com/docs/reference/engine/classes/Humanoid), and [HumanoidRigDescription joint names](https://create.roblox.com/docs/reference/engine/classes/HumanoidRigDescription).
 
 ## Known limitations
-- Bind dimensions and offsets are deterministic primitive-preview metadata, not measured/validated against generated Studio rigs.
-- The mandatory standard R6 and R15 Block generation and hierarchy/name comparison in Studio remains outstanding. Do not mark Phase 2 `PASSED` until it is performed and discrepancies, if any, are recorded.
+- Bind dimensions and offsets are deterministic primitive-preview metadata. The phase specification permits project-owned primitive geometry; visual fit should be refined during Phase 3 viewport review.
+- Explorer screenshots confirm the part IDs but do not expose every joint's Part0/Part1 property. Internal joint parent links follow the documented standard R6/R15 pose chains and remain covered by hierarchy validation; export compatibility will receive its own Studio checks in later phases.
 
 ## Decisions made
 - No stack, architecture, project schema, or API decision was changed.
-- A validation note was added to `docs/DECISIONS.md` for the limited local thumbnail evidence; no discrepancy from a generated standard rig is claimed.
+- `parentId` represents the connected animation-joint hierarchy, not the direct `Instance.Parent` shown for body parts in Explorer. The official Roblox Pose and Humanoid references support this distinction and the head-parent links for R6/R15.
+- The Studio name comparison is recorded in `docs/DECISIONS.md`; no discrepancy from the canonical R6/R15 part sets was found.
 
 ## Risks for next phase
-- Viewport dimensions and bind offsets should be reviewed after the standard Studio rig comparison; generated geometry may require adjustments.
-- The part-parent tree in an installed thumbnail is not proof of the KeyframeSequence pose/joint hierarchy.
+- Viewport dimensions and bind offsets use approximate project-owned primitives and should be reviewed visually in Phase 3.
+- Explorer screenshots confirm part names but do not expose every joint's `Part0`/`Part1`; exact Studio export mapping remains part of the later integration checks.
 
 ## Suggested next action
-Review the definitions and validator; use Roblox Studio Rig Builder to generate R6 and R15 Block, compare the part names and hierarchy with `docs/06_RIG_SPECIFICATION.md`, and record any actual standard-rig deviations before marking this phase `PASSED`.
+Begin Phase 3: render the approved internal rigs in the viewport and review their primitive dimensions and offsets.

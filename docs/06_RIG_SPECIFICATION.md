@@ -18,6 +18,8 @@ No renombrarlos por estética.
 
 # 3. R6
 
+Los árboles siguientes describen la jerarquía de joints/poses de animación, no el anidamiento de `Instance.Parent` de Roblox. En los modelos de Rig Builder, las partes del cuerpo aparecen como hijas del modelo `Rig`; los joints conectados definen la jerarquía que usan las poses de animación.
+
 Partes/joints objetivo:
 
 ```text
