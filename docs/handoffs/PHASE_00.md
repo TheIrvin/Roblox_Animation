@@ -18,6 +18,7 @@ READY_FOR_REVIEW
 - `eslint.config.mjs`, `.prettierrc.json`, `.prettierignore`, `scripts/verify.ps1`
 - `src/App.test.tsx`, `src/test-setup.ts`, `dist/.gitkeep`
 - `src-tauri/Cargo.lock` and Tauri-generated capability schemas
+- `dist/.gitkeep`
 
 ## Files modified
 - `AGENT_STATE.md`, `.gitignore`, `index.html`, `src/App.tsx`, `src/App.css`

@@ -1,11 +1,11 @@
 # Agent State
 
-Current phase: 0
-Status: READY_FOR_REVIEW
+Current phase: 1
+Status: NOT_STARTED
 
 ## Phases
 
-- Phase 0: READY_FOR_REVIEW
+- Phase 0: PASSED
 - Phase 1: NOT_STARTED
 - Phase 2: NOT_STARTED
 - Phase 3: NOT_STARTED
@@ -25,10 +25,10 @@ Status: READY_FOR_REVIEW
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`9d25dcb` — specifications and preflight status committed and pushed.
+`31b2111` — Phase 0 bootstrap reviewed; verify suite and Tauri smoke test passed.
 
 ## Blocking issues
-None for Phase 1. Roblox Studio is installed; Phase 2 rig comparison in Studio remains a required check.
+None. Roblox Studio is installed; Phase 2 rig comparison in Studio remains a required check.
 
 ## Next required action
-Orchestrator: inspect the Phase 0 diff and verify its gates before marking it PASSED.
+Start Phase 1: implement and verify the standalone core transforms and easing math.
