@@ -1,14 +1,14 @@
 # Agent State
 
 Current phase: 3
-Status: READY_FOR_REVIEW
+Status: PASSED
 
 ## Phases
 
 - Phase 0: PASSED
 - Phase 1: PASSED
 - Phase 2: PASSED
-- Phase 3: READY_FOR_REVIEW
+- Phase 3: PASSED
 - Phase 4: NOT_STARTED
 - Phase 5: NOT_STARTED
 - Phase 6: NOT_STARTED
@@ -25,10 +25,10 @@ Status: READY_FOR_REVIEW
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`3174720` — Phase 2 passed after independent verification and R6/R15 Studio name comparison.
+`053231d` — Phase 3 reviewed independently; full verification and manual R6/R15 arm smoke passed.
 
 ## Blocking issues
-No implementation blocker. Manual native viewport interaction on R6/R15 remains for orchestrator review.
+None. Phase 3 selection and rotation gate passed in the local viewport.
 
 ## Next required action
-Review docs/handoffs/PHASE_03.md and verify selection/rotation of R6 and R15 arms in the desktop viewport.
+Phase 3 is approved. Start Phase 4: store, commands, and undo/redo.
