@@ -1,0 +1,27 @@
+{
+  "package": "Roblox Animator Desktop - Claude Code Documentation",
+  "version": "1.0",
+  "referenceDate": "2026-09-25",
+  "markdownFiles": [
+    "00_START_HERE.md",
+    "01_PROJECT_MASTER.md",
+    "02_SRS.md",
+    "03_ARCHITECTURE.md",
+    "04_ENVIRONMENT_SETUP.md",
+    "05_REPOSITORY_STRUCTURE.md",
+    "06_RIG_SPECIFICATION.md",
+    "07_RBANIM_FORMAT.md",
+    "08_UI_UX_SPECIFICATION.md",
+    "09_STUDIO_BRIDGE.md",
+    "10_IMPLEMENTATION_PHASES.md",
+    "11_TEST_PLAN.md",
+    "12_DEFINITION_OF_DONE.md",
+    "13_AGENT_PROTOCOL.md",
+    "14_CLAUDE_CODE_MASTER_PROMPT.md",
+    "15_ROBLOX_COMPATIBILITY_NOTES.md",
+    "AGENT_STATE_TEMPLATE.md",
+    "DECISIONS.md",
+    "HANDOFF_TEMPLATE.md",
+    "README.md"
+  ]
+}

@@ -1,0 +1,96 @@
+# Architecture Decision Log
+
+## ADR-001 — Desktop stack
+
+**Status:** Accepted
+
+Use:
+- Tauri 2;
+- React + TypeScript;
+- Three.js through React Three Fiber;
+- Rust native layer.
+
+Reason:
+small focused desktop app, local filesystem and localhost bridge without embedding a full Chromium runtime as a separate application dependency.
+
+---
+
+## ADR-002 — Project format
+
+**Status:** Accepted
+
+`.rbanim` V1 is plain JSON UTF-8.
+
+No ZIP/container in MVP.
+
+---
+
+## ADR-003 — Internal rotations
+
+**Status:** Accepted
+
+Store quaternion `[x,y,z,w]`.
+
+Euler angles are UI only.
+
+---
+
+## ADR-004 — Roblox publication
+
+**Status:** Accepted
+
+V1 does not authenticate/publish directly from desktop.
+
+Desktop prepares export.
+Studio plugin builds `KeyframeSequence`.
+User publishes from Roblox Studio.
+
+---
+
+## ADR-005 — Studio communication
+
+**Status:** Accepted
+
+HTTP on `127.0.0.1`, default port 38472.
+
+No continuous polling.
+
+---
+
+## ADR-006 — Supported rigs
+
+**Status:** Accepted
+
+R6 + standard R15 Block in MVP.
+
+No advanced R15/custom avatars in V1.
+
+---
+
+## ADR-007 — Props
+
+**Status:** Accepted
+
+Props such as a stone are not animated as scene objects in V1.
+
+Use animation markers such as `THROW` to synchronize game logic.
+
+---
+
+## ADR template
+
+```markdown
+## ADR-XXX — Title
+
+**Status:** Proposed | Accepted | Superseded
+
+### Context
+
+### Decision
+
+### Alternatives
+
+### Consequences
+
+### Documents/code affected
+```
