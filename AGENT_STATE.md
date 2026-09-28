@@ -25,10 +25,10 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`f53f819` — Phase 4 reviewed independently; full verification and manual imported R6/R15 model, transform, reset, undo, and redo smoke passed.
+`f53f819` — Phase 4 verified with full checks and manual imported R6/R15 viewport smoke.
 
 ## Blocking issues
-None. Phase 4's store, undo/redo, and imported model viewport passed independent review.
+Phase 5 implementation is ready for review. Full checks, timeline UI smoke, and the three-pose store flow pass.
 
 ## Next required action
-Implement Phase 5 timeline/keyframes only: sorted per-joint tracks, insertion/update, delete/move, Auto Key, duration/FPS, and copy/paste keyframe. Preserve Phase 4 history and the R6/R15 mesh mappings.
+Review Phase 5 handoff, then mark it PASSED before starting Phase 6 playback and interpolation.

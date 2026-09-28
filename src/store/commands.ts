@@ -7,6 +7,12 @@ import {
 import { R6_RIG } from "../core/rigs/r6";
 import { R15_RIG } from "../core/rigs/r15";
 import type { RigId } from "../core/rigs/types";
+import {
+  deleteKeyframe,
+  moveKeyframe,
+  upsertKeyframe,
+  type JointKeyframe,
+} from "../core/animation/keyframes";
 import type { EditorDocument } from "./history";
 
 const rigs = { R6: R6_RIG, R15: R15_RIG } as const;
@@ -25,7 +31,23 @@ export type EditorCommand =
     }
   | { readonly type: "reset-joint"; readonly jointId: string }
   | { readonly type: "reset-pose" }
-  | { readonly type: "change-rig"; readonly rigId: RigId };
+  | { readonly type: "change-rig"; readonly rigId: RigId }
+  | { readonly type: "add-keyframe"; readonly jointId: string; readonly frame: number }
+  | { readonly type: "delete-keyframe"; readonly jointId: string; readonly frame: number }
+  | {
+      readonly type: "move-keyframe";
+      readonly jointId: string;
+      readonly sourceFrame: number;
+      readonly targetFrame: number;
+    }
+  | {
+      readonly type: "paste-keyframe";
+      readonly jointId: string;
+      readonly frame: number;
+      readonly keyframe: JointKeyframe;
+    }
+  | { readonly type: "set-duration"; readonly durationFrames: number }
+  | { readonly type: "set-fps"; readonly fps: number };
 
 export function commandLabel(command: EditorCommand): string {
   switch (command.type) {
@@ -39,6 +61,18 @@ export function commandLabel(command: EditorCommand): string {
       return "Reset pose";
     case "change-rig":
       return `Change rig to ${command.rigId}`;
+    case "add-keyframe":
+      return `Add ${command.jointId} keyframe at ${command.frame}`;
+    case "delete-keyframe":
+      return `Delete ${command.jointId} keyframe at ${command.frame}`;
+    case "move-keyframe":
+      return `Move ${command.jointId} keyframe to ${command.targetFrame}`;
+    case "paste-keyframe":
+      return `Paste ${command.jointId} keyframe at ${command.frame}`;
+    case "set-duration":
+      return "Set animation duration";
+    case "set-fps":
+      return "Set animation FPS";
   }
 }
 
@@ -85,6 +119,72 @@ export function applyEditorCommand(
     case "reset-pose":
       return { ...document, pose: createBindPose(rigs[document.rigId]) };
     case "change-rig":
-      return { rigId: command.rigId, pose: createBindPose(rigs[command.rigId]) };
+      return {
+        ...document,
+        rigId: command.rigId,
+        pose: createBindPose(rigs[command.rigId]),
+        tracks: {},
+      };
+    case "add-keyframe": {
+      const joint = rigs[document.rigId].joints.find(
+        (item) => item.id === command.jointId,
+      );
+      if (!joint) throw new RangeError(`Unknown joint ${command.jointId}.`);
+      const track = upsertKeyframe(
+        document.tracks[command.jointId],
+        command.jointId,
+        command.frame,
+        document.pose[command.jointId],
+        document.durationFrames,
+      );
+      return { ...document, tracks: { ...document.tracks, [command.jointId]: track } };
+    }
+    case "delete-keyframe":
+      return {
+        ...document,
+        tracks: deleteKeyframe(document.tracks, command.jointId, command.frame),
+      };
+    case "move-keyframe":
+      return {
+        ...document,
+        tracks: moveKeyframe(
+          document.tracks,
+          command.jointId,
+          command.sourceFrame,
+          command.targetFrame,
+          document.durationFrames,
+        ),
+      };
+    case "paste-keyframe": {
+      const joint = rigs[document.rigId].joints.find(
+        (item) => item.id === command.jointId,
+      );
+      if (!joint) throw new RangeError(`Unknown joint ${command.jointId}.`);
+      const track = upsertKeyframe(
+        document.tracks[command.jointId],
+        command.jointId,
+        command.frame,
+        command.keyframe.transform,
+        document.durationFrames,
+        command.keyframe.easing,
+      );
+      return { ...document, tracks: { ...document.tracks, [command.jointId]: track } };
+    }
+    case "set-duration": {
+      if (!Number.isSafeInteger(command.durationFrames) || command.durationFrames < 1)
+        throw new RangeError("Duration must be a positive integer.");
+      const maxFrame = Object.values(document.tracks).reduce(
+        (maximum, track) =>
+          Math.max(maximum, ...track.keyframes.map((keyframe) => keyframe.frame)),
+        0,
+      );
+      if (command.durationFrames < maxFrame)
+        throw new RangeError(`Duration cannot be shorter than frame ${maxFrame}.`);
+      return { ...document, durationFrames: command.durationFrames };
+    }
+    case "set-fps":
+      if (!Number.isSafeInteger(command.fps) || command.fps < 1 || command.fps > 240)
+        throw new RangeError("FPS must be an integer from 1 to 240.");
+      return { ...document, fps: command.fps };
   }
 }

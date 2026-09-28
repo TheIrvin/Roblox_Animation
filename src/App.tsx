@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useStore } from "zustand";
 import type { StoreApi } from "zustand/vanilla";
 import {
@@ -22,12 +22,21 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   const pose = useStore(store, (state) => state.pose);
   const selectedJointId = useStore(store, (state) => state.selectedJointId);
   const currentFrame = useStore(store, (state) => state.currentFrame);
+  const tracks = useStore(store, (state) => state.tracks);
+  const fps = useStore(store, (state) => state.fps);
+  const durationFrames = useStore(store, (state) => state.durationFrames);
+  const autoKey = useStore(store, (state) => state.autoKey);
+  const copiedKeyframe = useStore(store, (state) => state.copiedKeyframe);
   const isDirty = useStore(store, (state) => state.isDirty);
   const canUndo = useStore(store, (state) => state.canUndo);
   const canRedo = useStore(store, (state) => state.canRedo);
   const execute = useStore(store, (state) => state.execute);
   const selectJoint = useStore(store, (state) => state.selectJoint);
   const setCurrentFrame = useStore(store, (state) => state.setCurrentFrame);
+  const setAutoKey = useStore(store, (state) => state.setAutoKey);
+  const setDuration = useStore(store, (state) => state.setDuration);
+  const setFps = useStore(store, (state) => state.setFps);
+  const copyKeyframe = useStore(store, (state) => state.copyKeyframe);
   const beginTransformTransaction = useStore(
     store,
     (state) => state.beginTransformTransaction,
@@ -37,6 +46,12 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   const undo = useStore(store, (state) => state.undo);
   const redo = useStore(store, (state) => state.redo);
   const selectedJoint = rig.joints.find((joint) => joint.id === selectedJointId) ?? null;
+  const selectedTrack = selectedJointId ? tracks[selectedJointId] : undefined;
+  const selectedKeyframe = selectedTrack?.keyframes.find(
+    (keyframe) => keyframe.frame === currentFrame,
+  );
+  const [timelineError, setTimelineError] = useState("");
+  const draggedMarker = useRef(false);
 
   const sortedJoints = useMemo(() => [...rig.joints], [rig]);
   const rotation =
@@ -63,6 +78,17 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   const resetSelected = () => {
     if (!selectedJoint) return;
     execute({ type: "reset-joint", jointId: selectedJoint.id });
+  };
+
+  const runTimelineCommand = (command: Parameters<typeof execute>[0]) => {
+    try {
+      execute(command);
+      setTimelineError("");
+    } catch (error) {
+      setTimelineError(
+        error instanceof Error ? error.message : "No se pudo actualizar el timeline.",
+      );
+    }
   };
 
   const handleRotate = (
@@ -217,6 +243,215 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
           )}
         </aside>
       </section>
+      <section className="timeline-panel" aria-label="Timeline de animación">
+        <div className="timeline-toolbar">
+          <strong>Timeline</strong>
+          <label className="auto-key-control">
+            <input
+              type="checkbox"
+              checked={autoKey}
+              onChange={(event) => setAutoKey(event.target.checked)}
+            />
+            Auto Key
+          </label>
+          <button
+            className="timeline-button primary"
+            aria-label="Add keyframe"
+            disabled={!selectedJoint}
+            onClick={() =>
+              selectedJoint &&
+              runTimelineCommand({
+                type: "add-keyframe",
+                jointId: selectedJoint.id,
+                frame: currentFrame,
+              })
+            }
+          >
+            + Keyframe
+          </button>
+          <button
+            className="timeline-button"
+            aria-label="Delete keyframe"
+            disabled={!selectedKeyframe || !selectedJoint}
+            onClick={() =>
+              selectedJoint &&
+              runTimelineCommand({
+                type: "delete-keyframe",
+                jointId: selectedJoint.id,
+                frame: currentFrame,
+              })
+            }
+          >
+            Delete
+          </button>
+          <button
+            className="timeline-button"
+            aria-label="Copy keyframe"
+            disabled={!selectedKeyframe || !selectedJoint}
+            onClick={() => selectedJoint && copyKeyframe(selectedJoint.id, currentFrame)}
+          >
+            Copy
+          </button>
+          <button
+            className="timeline-button"
+            aria-label="Paste keyframe"
+            disabled={!copiedKeyframe || !selectedJoint}
+            onClick={() =>
+              selectedJoint &&
+              copiedKeyframe &&
+              runTimelineCommand({
+                type: "paste-keyframe",
+                jointId: selectedJoint.id,
+                frame: currentFrame,
+                keyframe: copiedKeyframe,
+              })
+            }
+          >
+            Paste
+          </button>
+          <label className="timeline-number">
+            FPS
+            <input
+              aria-label="FPS"
+              type="number"
+              min="1"
+              max="240"
+              step="1"
+              value={fps}
+              onChange={(event) => {
+                const value = Number(event.target.value);
+                if (!Number.isSafeInteger(value) || value < 1 || value > 240) return;
+                try {
+                  setFps(value);
+                  setTimelineError("");
+                } catch (error) {
+                  setTimelineError(
+                    error instanceof Error ? error.message : "FPS inválido.",
+                  );
+                }
+              }}
+            />
+          </label>
+          <label className="timeline-number">
+            Duration
+            <input
+              aria-label="Duration frames"
+              type="number"
+              min={Math.max(1, currentFrame)}
+              step="1"
+              value={durationFrames}
+              onChange={(event) => {
+                const value = Number(event.target.value);
+                if (Number.isSafeInteger(value) && value >= Math.max(1, currentFrame)) {
+                  try {
+                    setDuration(value);
+                    setTimelineError("");
+                  } catch (error) {
+                    setTimelineError(
+                      error instanceof Error ? error.message : "Duración inválida.",
+                    );
+                  }
+                }
+              }}
+            />
+          </label>
+          <span className="timeline-time">{(currentFrame / fps).toFixed(2)} s</span>
+        </div>
+        <div className="timeline-ruler">
+          <span className="timeline-track-name">Frame</span>
+          <input
+            aria-label="Timeline scrubber"
+            type="range"
+            min="0"
+            max={durationFrames}
+            step="1"
+            value={currentFrame}
+            onChange={(event) => setCurrentFrame(Number(event.target.value))}
+          />
+          <span className="timeline-frame-readout">
+            {currentFrame} / {durationFrames}
+          </span>
+        </div>
+        <div className="timeline-tracks" aria-label="Keyframe tracks">
+          {rig.joints
+            .filter((joint) => tracks[joint.id]?.keyframes.length)
+            .map((joint) => (
+              <div
+                className={`timeline-track${joint.id === selectedJointId ? " active" : ""}`}
+                key={joint.id}
+              >
+                <button
+                  className="timeline-track-name"
+                  onClick={() => selectJoint(joint.id)}
+                >
+                  {joint.displayName}
+                </button>
+                <div className="track-lane">
+                  {tracks[joint.id].keyframes.map((keyframe) => (
+                    <button
+                      key={keyframe.frame}
+                      className={`keyframe-marker${keyframe.frame === currentFrame ? " current" : ""}`}
+                      aria-label={`Keyframe ${joint.id} frame ${keyframe.frame}`}
+                      title={`${joint.displayName} · frame ${keyframe.frame}`}
+                      style={{ left: `${(keyframe.frame / durationFrames) * 100}%` }}
+                      onClick={() => {
+                        if (draggedMarker.current) {
+                          draggedMarker.current = false;
+                          return;
+                        }
+                        selectJoint(joint.id);
+                        setCurrentFrame(keyframe.frame);
+                      }}
+                      onPointerDown={(event) => {
+                        if (event.button !== 0) return;
+                        draggedMarker.current = false;
+                        event.currentTarget.setPointerCapture(event.pointerId);
+                      }}
+                      onPointerUp={(event) => {
+                        if (!event.currentTarget.hasPointerCapture(event.pointerId))
+                          return;
+                        event.currentTarget.releasePointerCapture(event.pointerId);
+                        const lane = event.currentTarget.parentElement;
+                        if (!lane) return;
+                        const rect = lane.getBoundingClientRect();
+                        const target = Math.max(
+                          0,
+                          Math.min(
+                            durationFrames,
+                            Math.round(
+                              ((event.clientX - rect.left) / rect.width) * durationFrames,
+                            ),
+                          ),
+                        );
+                        if (target !== keyframe.frame) {
+                          draggedMarker.current = true;
+                          setCurrentFrame(target);
+                        }
+                        runTimelineCommand({
+                          type: "move-keyframe",
+                          jointId: joint.id,
+                          sourceFrame: keyframe.frame,
+                          targetFrame: target,
+                        });
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          {Object.keys(tracks).length === 0 && (
+            <span className="timeline-empty">
+              Agrega un keyframe para comenzar. Con Auto Key, cada cambio de pose se
+              registra en el frame actual.
+            </span>
+          )}
+        </div>
+        {timelineError && (
+          <p className="timeline-error" role="alert">
+            {timelineError}
+          </p>
+        )}
+      </section>
       <footer className="statusbar">
         <span>
           {selectedJoint ? `Seleccionado: ${selectedJoint.id}` : "Sin selección"}
@@ -227,6 +462,7 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
             aria-label="Current frame"
             type="number"
             min="0"
+            max={durationFrames}
             step="1"
             value={currentFrame}
             onChange={(event) => {
