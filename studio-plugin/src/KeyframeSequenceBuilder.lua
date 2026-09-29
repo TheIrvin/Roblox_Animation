@@ -1,6 +1,7 @@
 local EnvelopeValidator = require(script.Parent:WaitForChild("EnvelopeValidator"))
 local Quaternion = require(script.Parent:WaitForChild("Quaternion"))
 local RigDefinitions = require(script.Parent:WaitForChild("RigDefinitions"))
+local PoseWeights = require(script.Parent:WaitForChild("PoseWeights"))
 
 local KeyframeSequenceBuilder = {}
 local IMPORT_FOLDER_NAME = "RobloxAnimatorImports"
@@ -27,19 +28,19 @@ local EASING_DIRECTIONS = {
 	InOut = Enum.PoseEasingDirection.InOut,
 }
 
-local function buildPoseTree(node, posesByJoint)
+local function buildPoseTree(node, posesByJoint, jointWeights)
 	local pose = Instance.new("Pose")
 	pose.Name = node.name
 	pose.CFrame = assert(Quaternion.ToCFrame(
 		posesByJoint[node.name].position,
 		posesByJoint[node.name].rotation
 	))
-	pose.Weight = 1
+	pose.Weight = jointWeights[node.name] or 0
 	local easing = posesByJoint[node.name].easing
 	pose.EasingStyle = EASING_STYLES[easing.style]
 	pose.EasingDirection = EASING_DIRECTIONS[easing.direction]
 	for _, childNode in ipairs(node.children or {}) do
-		pose:AddSubPose(buildPoseTree(childNode, posesByJoint))
+		pose:AddSubPose(buildPoseTree(childNode, posesByJoint, jointWeights))
 	end
 	return pose
 end
@@ -65,6 +66,7 @@ function KeyframeSequenceBuilder.Build(envelope)
 	end
 	local rig = envelope.project.project.rig
 	local tree = RigDefinitions.Trees[rig]
+	local jointWeights = PoseWeights.FromTracks(envelope.project.tracks)
 	local sequence = Instance.new("KeyframeSequence")
 	local ok, buildError = pcall(function()
 		sequence.Name = envelope.project.project.name
@@ -81,7 +83,7 @@ function KeyframeSequenceBuilder.Build(envelope)
 			local keyframe = Instance.new("Keyframe")
 			keyframe.Name = string.format("Frame_%06d", frameData.frame)
 			keyframe.Time = frameData.timeSeconds
-			keyframe:AddPose(buildPoseTree(tree, posesByJoint))
+			keyframe:AddPose(buildPoseTree(tree, posesByJoint, jointWeights))
 			for _, markerData in ipairs(frameData.markers) do
 				local marker = Instance.new("KeyframeMarker")
 				marker.Name = markerData.name

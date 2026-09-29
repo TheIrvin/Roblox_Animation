@@ -1,6 +1,7 @@
 local Quaternion = require("../src/Quaternion")
 local RigDefinitions = require("../src/RigDefinitions")
 local EnvelopeValidator = require("../src/EnvelopeValidator")
+local PoseWeights = require("../src/PoseWeights")
 
 local passed = 0
 local function test(name, callback)
@@ -145,6 +146,19 @@ test("unknown rig is rejected", function()
 	envelope.project.project.rig = "R20"
 	local valid, message = EnvelopeValidator.Validate(envelope, nil, RigDefinitions)
 	assert(not valid and message:find("R6 or R15"))
+end)
+
+test("only animated joints receive weight, preserving locomotion channels", function()
+	local weights = PoseWeights.FromTracks({
+		UpperTorso = { keyframes = { { frame = 0 } } },
+		RightUpperArm = { keyframes = { { frame = 0 }, { frame = 16 } } },
+		LeftUpperLeg = { keyframes = {} },
+	})
+	assert(weights.UpperTorso == 1)
+	assert(weights.RightUpperArm == 1)
+	assert(weights.HumanoidRootPart == nil)
+	assert(weights.LowerTorso == nil)
+	assert(weights.LeftUpperLeg == nil)
 end)
 
 test("missing full-pose joint is rejected", function()

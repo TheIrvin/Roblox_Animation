@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { quaternionFromEulerXYZ } from "../math/quaternion";
 import { createBindPose } from "../rigs/pose";
 import { R15_RIG } from "../rigs/r15";
-import { upsertKeyframe, type AnimationTracks, type JointTrack } from "./keyframes";
+import r15ThrowRock from "../export/fixtures/throw-rock-r15.json";
+import { upsertKeyframe, type AnimationTracks } from "./keyframes";
 import { evaluateAnimationFrame } from "./evaluator";
 
 describe("animation evaluator", () => {
@@ -136,35 +137,11 @@ describe("animation evaluator", () => {
     expect(() => evaluateAnimationFrame({}, pose, Number.NaN)).toThrow(RangeError);
   });
 
-  it("evaluates the preliminary R15 ThrowRock tracks at playback cadence", () => {
-    const definitions = [
-      { jointId: "UpperTorso", angles: [0, 0.15, 0.55, 0] },
-      { jointId: "RightUpperArm", angles: [0, -0.45, 1.35, 0] },
-      { jointId: "RightLowerArm", angles: [0, 1.1, 0.25, 0] },
-    ] as const;
-    const frames = [0, 8, 16, 22];
-    const tracks = Object.fromEntries(
-      definitions.map(({ jointId, angles }) => {
-        let track: JointTrack | undefined;
-        frames.forEach((frame, index) => {
-          track = upsertKeyframe(
-            track,
-            jointId,
-            frame,
-            {
-              position: [0, 0, 0],
-              rotation: quaternionFromEulerXYZ([angles[index], 0, 0]),
-            },
-            22,
-            { style: "Cubic", direction: "Out" },
-          );
-        });
-        return [jointId, track];
-      }),
-    ) as AnimationTracks;
+  it("plays the R15 ThrowRock upper-body choreography without moving root or legs", () => {
+    const tracks = r15ThrowRock.tracks as unknown as AnimationTracks;
     const basePose = createBindPose(R15_RIG);
     let previous = evaluateAnimationFrame(tracks, basePose, 0);
-    for (let frame = 0.5; frame <= 22; frame += 0.5) {
+    for (let frame = 0.5; frame <= 32; frame += 0.5) {
       const pose = evaluateAnimationFrame(tracks, basePose, frame);
       for (const jointId of Object.keys(tracks)) {
         const rotation = pose[jointId].rotation;
@@ -172,10 +149,24 @@ describe("animation evaluator", () => {
         expect(rotation.every(Number.isFinite)).toBe(true);
       }
       expect(pose.RightUpperArm.rotation).not.toEqual(previous.RightUpperArm.rotation);
+      for (const jointId of [
+        "HumanoidRootPart",
+        "LeftUpperLeg",
+        "LeftLowerLeg",
+        "LeftFoot",
+        "RightUpperLeg",
+        "RightLowerLeg",
+        "RightFoot",
+      ]) {
+        expect(pose[jointId]).toEqual(basePose[jointId]);
+      }
       previous = pose;
     }
+    expect(tracks).not.toHaveProperty("HumanoidRootPart");
+    expect(tracks).not.toHaveProperty("LeftUpperLeg");
+    expect(tracks).toHaveProperty("LowerTorso");
     expect(evaluateAnimationFrame(tracks, basePose, 16).RightUpperArm).toEqual(
-      tracks.RightUpperArm.keyframes[2].transform,
+      tracks.RightUpperArm.keyframes.find((keyframe) => keyframe.frame === 16)?.transform,
     );
   });
 });

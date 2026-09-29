@@ -19,6 +19,8 @@ dist-ssr
 target
 studio-plugin/build
 *.rbanim
+!samples/ThrowRock-R15.rbanim
+!samples/ThrowRock-R6.rbanim
 
 # Editor directories and files
 .vscode/*

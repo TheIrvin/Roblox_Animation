@@ -294,9 +294,27 @@ InOut -> Enum.PoseEasingDirection.InOut
 Referencia:
 https://create.roblox.com/docs/reference/engine/enums/PoseEasingStyle
 
+`Cubic` se conserva para importar proyectos antiguos; los keyframes nuevos deben usar `CubicV2`. Roblox documenta un error de inversión de dirección en el alias heredado `Cubic` entre el Animation Editor y runtime.
+
 ---
 
-# 13. Markers
+# 13. Pesos de pose y canales sin animar
+
+El envelope exportado contiene una pose por joint en cada frame para mantener el contrato completo. Eso no significa que todos los joints deban ser controlados por esa animación.
+
+- Asignar `Pose.Weight = 1` solamente a los joints con tracks y keyframes en el proyecto.
+- Mantener `Pose.Weight = 0` para la raíz, joints intermedios y extremidades que no tengan track. Los ancestros con peso cero siguen formando la jerarquía necesaria para alcanzar un joint animado.
+- Así, una animación de prioridad `Action` puede superponer torso y brazos sin reemplazar las pistas `Movement` de piernas. La prioridad elige cuál pista manda cuando varias animan el mismo joint.
+
+Roblox muestra esta estructura en el ejemplo oficial de `KeyframeSequence`: `HumanoidRootPart` usa peso cero y `LowerTorso` peso uno.
+
+Referencias:
+- https://create.roblox.com/docs/reference/engine/classes/KeyframeSequence
+- https://create.roblox.com/docs/reference/engine/classes/AnimationTrack
+
+---
+
+# 14. Markers
 
 Para cada marker:
 1. encontrar/crear keyframe en el mismo tiempo;
@@ -317,7 +335,7 @@ Referencias:
 
 ---
 
-# 14. Lugar de inserción
+# 15. Lugar de inserción
 
 Preferencia V1:
 
@@ -340,7 +358,7 @@ No depender de una estructura interna no documentada sin validación manual.
 
 ---
 
-# 15. Validación del rig seleccionado
+# 16. Validación del rig seleccionado
 
 Para `Import Latest` no es estrictamente necesario modificar el rig.
 
@@ -360,7 +378,7 @@ o lista de partes faltantes.
 
 ---
 
-# 16. Publicación
+# 17. Publicación
 
 V1 termina cuando Studio posee un `KeyframeSequence` correcto.
 
@@ -375,7 +393,7 @@ No automatizar credenciales/publicación en V1.
 
 ---
 
-# 17. Nota sobre CurveAnimation
+# 18. Nota sobre CurveAnimation
 
 Roblox utiliza `CurveAnimation` en flujos modernos específicos, especialmente Marketplace/emotes.
 

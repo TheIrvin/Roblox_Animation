@@ -13,24 +13,42 @@ function fixture(project: unknown): RbanimProjectV1 {
   return project as RbanimProjectV1;
 }
 
-function expectNormalizedFixture(project: RbanimProjectV1): ExportEnvelopeV1 {
+function expectNormalizedFixture(
+  project: RbanimProjectV1,
+  expectedTrackIds: string[],
+  staticJointIds: string[],
+): ExportEnvelopeV1 {
   const result = normalizeProjectForExport(project, exportMetadata);
   expect(result.diagnostics).toEqual([]);
   expect(result.envelope).not.toBeNull();
   const envelope = result.envelope!;
 
-  expect(envelope.frames.map(({ frame }) => frame)).toEqual([0, 9, 16, 22]);
+  expect(envelope.frames.map(({ frame }) => frame)).toEqual([
+    0, 4, 9, 13, 16, 19, 25, 32,
+  ]);
   expect(envelope.frames.map(({ timeSeconds }) => timeSeconds)).toEqual([
     0,
+    4 / 30,
     0.3,
+    13 / 30,
     16 / 30,
-    22 / 30,
+    19 / 30,
+    25 / 30,
+    32 / 30,
   ]);
+  expect(Object.keys(project.tracks).sort()).toEqual([...expectedTrackIds].sort());
   expect(
     envelope.frames.every(
       ({ poses }) => poses.length === (project.project.rig === "R6" ? 7 : 16),
     ),
   ).toBe(true);
+  for (const { poses } of envelope.frames) {
+    for (const jointId of staticJointIds) {
+      const pose = poses.find((candidate) => candidate.jointId === jointId);
+      expect(pose?.position).toEqual([0, 0, 0]);
+      expect(pose?.rotation).toEqual([0, 0, 0, 1]);
+    }
+  }
   expect(envelope.frames.find(({ frame }) => frame === 16)?.markers).toEqual([
     {
       id: project.project.rig === "R6" ? "throw-r6" : "throw-r15",
@@ -39,22 +57,60 @@ function expectNormalizedFixture(project: RbanimProjectV1): ExportEnvelopeV1 {
       value: "rock",
     },
   ]);
+  expect(envelope.project.project).toEqual(project.project);
+  expect(envelope.project.markers).toEqual(project.markers);
+  expect(Object.keys(envelope.project.tracks).sort()).toEqual(
+    Object.keys(project.tracks).sort(),
+  );
   return envelope;
 }
 
 describe("Phase 10 export normalizer", () => {
   it("normalizes the ThrowRock R15 fixture into a stable full-pose envelope", () => {
     const project = fixture(r15Fixture);
-    const envelope = expectNormalizedFixture(project);
+    const envelope = expectNormalizedFixture(
+      project,
+      [
+        "LowerTorso",
+        "UpperTorso",
+        "Head",
+        "LeftUpperArm",
+        "LeftLowerArm",
+        "RightUpperArm",
+        "RightLowerArm",
+        "RightHand",
+      ],
+      [
+        "HumanoidRootPart",
+        "LeftUpperLeg",
+        "LeftLowerLeg",
+        "LeftFoot",
+        "RightUpperLeg",
+        "RightLowerLeg",
+        "RightFoot",
+      ],
+    );
     expect(normalizeProjectForExport(project, exportMetadata).envelope).toEqual(envelope);
-    expect(envelope).toMatchSnapshot();
+    expect(
+      envelope.frames
+        .find(({ frame }) => frame === 16)
+        ?.poses.find(({ jointId }) => jointId === "RightUpperArm")?.rotation,
+    ).not.toEqual([0, 0, 0, 1]);
   });
 
   it("normalizes the ThrowRock R6 fixture into a stable full-pose envelope", () => {
     const project = fixture(r6Fixture);
-    const envelope = expectNormalizedFixture(project);
+    const envelope = expectNormalizedFixture(
+      project,
+      ["Head", "Left Arm", "Right Arm"],
+      ["HumanoidRootPart", "Left Leg", "Right Leg"],
+    );
     expect(normalizeProjectForExport(project, exportMetadata).envelope).toEqual(envelope);
-    expect(envelope).toMatchSnapshot();
+    expect(
+      envelope.frames
+        .find(({ frame }) => frame === 16)
+        ?.poses.find(({ jointId }) => jointId === "Right Arm")?.rotation,
+    ).not.toEqual([0, 0, 0, 1]);
   });
 
   it("reports invalid project data and invalid envelope metadata", () => {

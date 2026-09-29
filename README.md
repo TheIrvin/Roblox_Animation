@@ -18,6 +18,15 @@ Download the Windows installer and Studio plugin from [`dist/`](dist/):
 The bridge only listens on the local loopback address. Rojo is needed to rebuild
 the plugin, not to use the installed app.
 
+## ThrowRock example projects
+
+Open a sample project in the desktop app to preview the revised throw:
+
+- [`samples/ThrowRock-R15.rbanim`](samples/ThrowRock-R15.rbanim) animates the pelvis, chest, head, and arms while leaving the root and leg tracks untouched.
+- [`samples/ThrowRock-R6.rbanim`](samples/ThrowRock-R6.rbanim) moves the head and arms while leaving its shared torso still; R6 has no separate waist and hip joints.
+
+The `THROW=rock` marker remains at frame 16 in both samples.
+
 ## Development
 
 ```powershell
