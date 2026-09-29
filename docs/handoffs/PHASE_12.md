@@ -10,6 +10,7 @@ READY_FOR_REVIEW
 - Added an HTTP bridge client that reports permission/connection failures, checks protocol V1, handles an empty export, and reads latest export metadata without creating a sequence.
 - Added a repeatable Windows build command and generated the plugin model with Rojo 7.7.0.
 - Installed `RobloxAnimatorPlugin.rbxm` into the detected Roblox Studio plugin folder under `%LOCALAPPDATA%\Roblox\Plugins`.
+- Fixed both ModuleScript lookups to resolve under the packaged root Script, rebuilt the plugin, and replaced the installed model.
 
 ## Files created
 
@@ -41,8 +42,9 @@ READY_FOR_REVIEW
 
 - Rojo built `studio-plugin/build/RobloxAnimatorPlugin.rbxm` (3,891 bytes).
 - `npm run verify` passed: TypeScript, ESLint, 13 Vitest files / 73 tests, Prettier, Rust formatting, Clippy, Rust tests (7/7), and Vite production build.
-- Roblox Studio is installed. The plugin was copied to `%LOCALAPPDATA%\Roblox\Plugins\RobloxAnimatorPlugin.rbxm`.
-- Studio was launched for manual validation, but the plugin's `Connected` UI state and localhost permission decision are still unverified, so Phase 12 is not PASSED.
+- Roblox Studio log confirmed the installed plugin was discovered, then failed at startup with `UI is not a valid member of Plugin "user_RobloxAnimatorPlugin.rbxm"`. The Rojo sourcemap shows `UI` and `BridgeClient` are children of the root Script; the entry script now looks up `UI` beneath itself, and `UI` looks up its sibling `BridgeClient` beneath the root Script.
+- `npm run build:plugin` passed after the fix; the rebuilt model is 3,909 bytes and was copied to `%LOCALAPPDATA%\Roblox\Plugins\RobloxAnimatorPlugin.rbxm`.
+- Studio must restart to load this replacement. The widget's `Connected` state and localhost permission decision remain unverified, so Phase 12 is not PASSED.
 
 ## Known limitations
 
@@ -60,4 +62,4 @@ READY_FOR_REVIEW
 
 ## Suggested next action
 
-Run the Tauri app with `npm run tauri -- dev`, open Roblox Studio, open the Roblox Animator plugin widget, and approve its localhost access request. Confirm the widget reports `Connected`; then Phase 12 can be marked PASSED and Phase 13 can begin.
+Restart Roblox Studio, open the Roblox Animator toolbar widget, and approve its localhost access request. Confirm the widget reports `Connected`; then Phase 12 can be marked PASSED and Phase 13 can begin.

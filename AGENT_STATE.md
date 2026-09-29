@@ -25,10 +25,10 @@ Status: READY_FOR_REVIEW
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`400ac17` — Phase 12 implementation passed `npm run verify`; Rojo 7.7.0 built the plugin model.
+`e3b4e57` — Phase 12 implementation passed `npm run verify`; Rojo 7.7.0 built the plugin model.
 
 ## Blocking issues
-Phase 12's manual gate requires the user to open Roblox Studio and approve localhost access so the plugin shows `Connected`.
+The Phase 12 plugin was loaded by Studio but failed during startup because the module lookup used the Plugin object as parent. The lookup is fixed and the rebuilt plugin is installed. Studio must restart to load the replacement; then the user must open the widget and approve localhost access so it shows `Connected`.
 
 ## Next required action
-Open the Tauri app and Roblox Studio, approve the plugin's localhost request, verify `Connected`, then mark Phase 12 PASSED before starting Phase 13.
+Restart Roblox Studio, open the Roblox Animator toolbar widget, approve its localhost request, and verify `Connected`; then mark Phase 12 PASSED before starting Phase 13.

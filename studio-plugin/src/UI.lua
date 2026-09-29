@@ -1,4 +1,4 @@
-local BridgeClient = require(script.Parent.BridgeClient)
+local BridgeClient = require(script.Parent:WaitForChild("BridgeClient"))
 
 local UI = {}
 

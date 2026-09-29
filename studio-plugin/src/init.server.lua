@@ -1,4 +1,4 @@
-local UI = require(script.Parent.UI)
+local UI = require(script:WaitForChild("UI"))
 
 assert(plugin, "This script must run as a Roblox Studio plugin.")
 
