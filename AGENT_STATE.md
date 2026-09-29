@@ -20,15 +20,15 @@ Status: IN_PROGRESS
 - Phase 12: PASSED
 - Phase 13: PASSED
 - Phase 14: IN_PROGRESS
-- Phase 15: NOT_STARTED
+- Phase 15: IN_PROGRESS
 - Phase 16: NOT_STARTED
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`ef2a21d` — Phase 13 Studio imports verified for R15 and R6; both sequences played on matching rigs and fired `THROW=rock`.
+`5e98702` — Phase 13 imports verified and Phase 14 R15 publication/playback evidence recorded.
 
 ## Blocking issues
-Phase 14 still needs the desktop save/restart/reopen checks and Studio's native Animation Editor publish UI. The current Studio MCP exposes the DataModel but the computer-use session reports no native app surface, so those UI steps cannot be driven here. Local R15 import, playback, movement, and marker checks have passed.
+Phases 14 and 15 still need the desktop app save/restart/reopen checks. Studio publication and published-ID playback are verified for both rigs: R15 asset `135657623288200`, R6 asset `118009092366291`; both moved their matching rigs and fired `THROW=rock`.
 
 ## Next required action
-Provide native desktop/Studio UI control, or complete the app save/restart/reopen and publish `ThrowRock` in Studio. Then return the published asset ID so playback and marker checks can continue.
+Complete the desktop app save/restart/reopen checks for both rig projects, record the evidence, and then advance to Phase 16. Do not start Phase 16 or 17 before both E2E gates pass.
