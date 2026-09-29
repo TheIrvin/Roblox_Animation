@@ -1,7 +1,7 @@
 # Agent State
 
 Current phase: 11
-Status: READY_FOR_REVIEW
+Status: PASSED
 
 ## Phases
 
@@ -16,7 +16,7 @@ Status: READY_FOR_REVIEW
 - Phase 8: PASSED
 - Phase 9: PASSED
 - Phase 10: PASSED
-- Phase 11: READY_FOR_REVIEW
+- Phase 11: PASSED
 - Phase 12: NOT_STARTED
 - Phase 13: NOT_STARTED
 - Phase 14: NOT_STARTED
@@ -25,10 +25,10 @@ Status: READY_FOR_REVIEW
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`55e9a22` — Phase 11 working tree passed `npm run verify`; bridge route, payload, ACK, and loopback socket tests pass.
+`ffd3032` — Phase 11 implementation passed `npm run verify`; bridge routes, payload validation, ACK, and real loopback TCP smoke pass.
 
 ## Blocking issues
 None. Phase 8 markers survive the `.rbanim` save/reopen path. Phase 9 full verification also passed.
 
 ## Next required action
-Review Phase 11 bridge and verification, mark it PASSED, then build the Rojo plugin shell in Phase 12.
+Build the Rojo Studio plugin shell in Phase 12; the Studio permission/connection gate needs Roblox Studio running.
