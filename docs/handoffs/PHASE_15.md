@@ -1,7 +1,7 @@
 # Phase 15 Handoff — R6 End-to-end
 
 ## Status
-IN_PROGRESS — Studio import, publication, published-ID playback, movement, and marker passed; desktop app save/restart/reopen remains unverified.
+PASSED — Studio import, publication, published-ID playback, movement, marker, and app save/restart/reopen passed.
 
 ## Scope completed
 
@@ -11,6 +11,7 @@ IN_PROGRESS — Studio import, publication, published-ID playback, movement, and
 - Studio confirmed successful upload as `ThrowRock R6`, asset ID `118009092366291` (`https://create.roblox.com/store/asset/118009092366291`).
 - Loaded `rbxassetid://118009092366291` on an R6 humanoid rig in Studio Play mode. The track length was `0.733` seconds, the head, arms, and legs moved, and marker `THROW` fired with value `rock`.
 - Removed the temporary R6 `AnimSaves` reference and local clips created during the Studio publication flow.
+- Saved the desktop project to `%TEMP%\RobloxAnimatorPhase13\ThrowRock-R6.rbanim`, closed the editor, restarted it with `npm run tauri dev`, and reopened the file. The R6 rig, seven-joint tree, keyframes, and `THROW` marker were present after reopening.
 
 ## Verification results
 
@@ -18,7 +19,7 @@ IN_PROGRESS — Studio import, publication, published-ID playback, movement, and
 - Studio publication: PASSED — asset `118009092366291`.
 - Published-ID R6 playback and movement: PASSED — track length `0.733` seconds.
 - Published-ID marker `THROW=rock`: PASSED.
-- Desktop app save/restart/reopen workflow: NOT VERIFIED in this continuation; this remains the Phase 15 gate item.
+- Desktop app save/restart/reopen workflow: PASSED — the R6 project reopened with its rig, tracks, and marker intact.
 
 ## Decisions
 
@@ -28,4 +29,4 @@ IN_PROGRESS — Studio import, publication, published-ID playback, movement, and
 
 ## Next action
 
-Verify save, restart, and reopen for the R6 desktop app project. Then update this handoff and `AGENT_STATE.md` before starting Phase 16.
+Continue Phase 16 UX/polish. The restarted desktop app showed a bridge error; check reconnection as part of the bridge and error-state polish.

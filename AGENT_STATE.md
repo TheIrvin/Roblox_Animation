@@ -1,6 +1,6 @@
 # Agent State
 
-Current phase: 14
+Current phase: 16
 Status: IN_PROGRESS
 
 ## Phases
@@ -19,16 +19,16 @@ Status: IN_PROGRESS
 - Phase 11: PASSED
 - Phase 12: PASSED
 - Phase 13: PASSED
-- Phase 14: IN_PROGRESS
-- Phase 15: IN_PROGRESS
-- Phase 16: NOT_STARTED
+- Phase 14: PASSED
+- Phase 15: PASSED
+- Phase 16: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`5e98702` — Phase 13 imports verified and Phase 14 R15 publication/playback evidence recorded.
+`617ac27` — R15 and R6 publication and published-ID E2E evidence recorded.
 
 ## Blocking issues
-Phases 14 and 15 still need the desktop app save/restart/reopen checks. Studio publication and published-ID playback are verified for both rigs: R15 asset `135657623288200`, R6 asset `118009092366291`; both moved their matching rigs and fired `THROW=rock`.
+Studio publication, published-ID playback, movement, marker, and desktop save/restart/reopen are verified for both rigs: R15 asset `135657623288200`, R6 asset `118009092366291`. The desktop bridge shows an error state after restarting the app and needs follow-up in Phase 16.
 
 ## Next required action
-Complete the desktop app save/restart/reopen checks for both rig projects, record the evidence, and then advance to Phase 16. Do not start Phase 16 or 17 before both E2E gates pass.
+Complete Phase 16 UX/polish, including bridge reconnection/error handling, before beginning the local release build in Phase 17.
