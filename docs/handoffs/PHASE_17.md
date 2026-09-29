@@ -17,6 +17,8 @@ IN_PROGRESS — release artifacts and installation documentation are ready; the 
 - `npm run verify`: PASSED — TypeScript, ESLint, 13 Vitest files / 73 tests, Prettier, Rust formatting, Clippy, 7 Rust tests, and frontend build. Vite reports the known 1.3 MB JavaScript chunk warning.
 - `npm run build:plugin`: PASSED — Rojo built the plugin model.
 - `npm run stage:release`: PASSED — both installers and the plugin are present in `dist/`.
+- `npm run test:plugin`: PASSED — plugin Luau sources parse and all 13 Luau tests pass.
+- The staged plugin model and `%LOCALAPPDATA%\Roblox\Plugins\RobloxAnimatorPlugin.rbxm` have matching SHA-256 hashes.
 - `npm run tauri build`: PASSED — MSI and NSIS packages produced.
 - NSIS installer run silently as a per-user install: exit code 0; Windows uninstall registry reports version `0.1.0` and install path `%LOCALAPPDATA%\Roblox Animator Desktop`.
 - Installed executable started. The local bridge health endpoint at `127.0.0.1:38472/health` returned `status: ok`.
