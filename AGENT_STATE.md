@@ -1,7 +1,7 @@
 # Agent State
 
 Current phase: 13
-Status: IN_PROGRESS
+Status: PASSED
 
 ## Phases
 
@@ -18,17 +18,17 @@ Status: IN_PROGRESS
 - Phase 10: PASSED
 - Phase 11: PASSED
 - Phase 12: PASSED
-- Phase 13: IN_PROGRESS
+- Phase 13: PASSED
 - Phase 14: NOT_STARTED
 - Phase 15: NOT_STARTED
 - Phase 16: NOT_STARTED
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`4c66033` — Phase 13 implementation, Luau tests, and repository verification passed; Studio import gate remains pending.
+`ef2a21d` — Phase 13 Studio imports verified for R15 and R6; both sequences played on matching rigs and fired `THROW=rock`.
 
 ## Blocking issues
-Phase 13's Studio gate remains: restart Studio to load the current plugin build, open the ThrowRock R15 fixture in the desktop app, prepare the export, import it, and verify the resulting KeyframeSequence and marker in ServerStorage.
+None for Phase 13. Phase 14 begins with the R15 end-to-end workflow.
 
 ## Next required action
-Finish Phase 13's manual Studio validation: import ThrowRock R15, inspect its KeyframeSequence hierarchy, keyframe times, marker, loop/priority metadata, and confirm the desktop ACK.
+Run Phase 14: complete the R15 create/save/reopen/export/import/publish/playback workflow and record its results.

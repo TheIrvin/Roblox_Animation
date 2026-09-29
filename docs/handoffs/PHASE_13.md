@@ -1,7 +1,7 @@
 # Phase 13 Handoff
 
 ## Status
-IN_PROGRESS — implementation and automated validation are complete; the Studio import gate is pending.
+PASSED — implementation, automated validation, and Studio import/playback checks are complete for R15 and R6.
 
 ## Scope completed
 
@@ -39,9 +39,15 @@ IN_PROGRESS — implementation and automated validation are complete; the Studio
 - `rojo sourcemap studio-plugin/default.project.json` confirms the root plugin Script contains all seven ModuleScripts.
 - Temporary manual test projects were copied from the existing deterministic fixtures to `%TEMP%\RobloxAnimatorPhase13\ThrowRock-R15.rbanim` and `%TEMP%\RobloxAnimatorPhase13\ThrowRock-R6.rbanim`.
 
-## Manual validation pending
+## Studio verification completed
 
-The Phase 12 screenshot at `docs/handoffs/evidence/phase-12-connected.png` confirms the plugin can reach the local bridge. Phase 13's required Studio gate is not yet passed: Studio must restart to load the new builder, the R15 fixture must be opened and exported from the desktop app, and **Import Latest** must create `ServerStorage.RobloxAnimatorImports/ThrowRock` (or a numbered sibling if the name exists). Inspect the full R15 pose tree, all four fixture times (0, 9, 16, 22 at 30 FPS), `THROW` marker with value `rock`, `Loop = false`, and `Priority = Action`; confirm the desktop ACK.
+- The Studio plugin connected to the desktop bridge and imported the R15 and R6 fixtures into `ServerStorage.RobloxAnimatorImports` as `ThrowRock` and `ThrowRock (2)` without replacing an existing sequence.
+- Both sequences contain keyframes at 0, 0.300, 0.533, and 0.733 seconds, with a `THROW` marker carrying value `rock` at 0.533 seconds; `Loop = false` and `Priority = Action`.
+- Studio's `KeyframeSequenceProvider:RegisterKeyframeSequence` generated temporary preview IDs. In Play mode, the matching R15 and R6 rigs both moved during playback, reached a 0.733-second track length, and fired `THROW` with value `rock`.
+- The temporary R15 test rig was created only in the Play DataModel and disappeared when Play mode stopped; no test rig was saved into the place.
+- The final local R15/R6 sequences remain under `ServerStorage.RobloxAnimatorImports`.
+
+This validates local import and engine playback. Publishing an asset and testing the published asset IDs belongs to Phases 14 and 15.
 
 ## Decisions and references
 
@@ -52,4 +58,4 @@ The Phase 12 screenshot at `docs/handoffs/evidence/phase-12-connected.png` confi
 
 ## Next action
 
-Restart Roblox Studio, open `%TEMP%\RobloxAnimatorPhase13\ThrowRock-R15.rbanim` in the desktop app, click **Prepare Export**, then click **Import Latest** in Studio and inspect the created sequence. Record the Studio evidence before marking Phase 13 PASSED.
+Continue the R15 E2E: publish `ThrowRock` from the native Animation Editor, record its asset ID, and verify playback and the marker using that ID.
