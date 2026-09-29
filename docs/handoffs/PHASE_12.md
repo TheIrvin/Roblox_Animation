@@ -1,7 +1,7 @@
 # Phase 12 Handoff
 
 ## Status
-READY_FOR_REVIEW
+PASSED
 
 ## Scope completed
 
@@ -11,6 +11,7 @@ READY_FOR_REVIEW
 - Added a repeatable Windows build command and generated the plugin model with Rojo 7.7.0.
 - Installed `RobloxAnimatorPlugin.rbxm` into the detected Roblox Studio plugin folder under `%LOCALAPPDATA%\Roblox\Plugins`.
 - Fixed both ModuleScript lookups to resolve under the packaged root Script, rebuilt the plugin, and replaced the installed model.
+- Confirmed the rebuilt plugin loads without errors, the widget connects to the local bridge, and the user-provided Studio screenshot displays `Desktop: Connected`.
 
 ## Files created
 
@@ -20,6 +21,7 @@ READY_FOR_REVIEW
 - `studio-plugin/src/UI.lua`
 - `scripts/build-plugin.ps1`
 - `docs/handoffs/PHASE_12.md`
+- `docs/handoffs/evidence/phase-12-connected.png`
 
 ## Files modified
 
@@ -40,11 +42,12 @@ READY_FOR_REVIEW
 
 ## Verification results
 
-- Rojo built `studio-plugin/build/RobloxAnimatorPlugin.rbxm` (3,891 bytes).
+- Rojo built `studio-plugin/build/RobloxAnimatorPlugin.rbxm` (3,891 bytes before the module-path correction).
 - `npm run verify` passed: TypeScript, ESLint, 13 Vitest files / 73 tests, Prettier, Rust formatting, Clippy, Rust tests (7/7), and Vite production build.
-- Roblox Studio log confirmed the installed plugin was discovered, then failed at startup with `UI is not a valid member of Plugin "user_RobloxAnimatorPlugin.rbxm"`. The Rojo sourcemap shows `UI` and `BridgeClient` are children of the root Script; the entry script now looks up `UI` beneath itself, and `UI` looks up its sibling `BridgeClient` beneath the root Script.
-- `npm run build:plugin` passed after the fix; the rebuilt model is 3,909 bytes and was copied to `%LOCALAPPDATA%\Roblox\Plugins\RobloxAnimatorPlugin.rbxm`.
-- Studio must restart to load this replacement. The widget's `Connected` state and localhost permission decision remain unverified, so Phase 12 is not PASSED.
+- Roblox Studio first reported `UI is not a valid member of Plugin "user_RobloxAnimatorPlugin.rbxm"`. The entry script now resolves `UI` beneath itself, and `UI` resolves its sibling `BridgeClient` beneath the root Script.
+- `npm run build:plugin` passed after the fix; the rebuilt model is 3,918 bytes and was copied to `%LOCALAPPDATA%\Roblox\Plugins\RobloxAnimatorPlugin.rbxm`.
+- The latest Studio log confirms `Running plugin user_RobloxAnimatorPlugin.rbxm` with no CreatorError. It also records the plugin dock widget.
+- Manual gate: the user supplied `evidence/phase-12-connected.png`, showing `Desktop: Connected` and `Connected to Roblox Animator Desktop.` Phase 12 is PASSED.
 
 ## Known limitations
 
@@ -58,8 +61,8 @@ READY_FOR_REVIEW
 
 ## Risks for next phase
 
-- Do not begin Phase 13 until Studio shows the plugin and a successful `Connected` state after the user approves localhost access.
+- Phase 13's sequence structure, marker preservation, and import behavior still need validation in Studio.
 
 ## Suggested next action
 
-Restart Roblox Studio, open the Roblox Animator toolbar widget, and approve its localhost access request. Confirm the widget reports `Connected`; then Phase 12 can be marked PASSED and Phase 13 can begin.
+Implement and validate the Phase 13 KeyframeSequence builder in Studio.

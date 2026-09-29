@@ -1,7 +1,7 @@
 # Agent State
 
-Current phase: 12
-Status: READY_FOR_REVIEW
+Current phase: 13
+Status: IN_PROGRESS
 
 ## Phases
 
@@ -17,8 +17,8 @@ Status: READY_FOR_REVIEW
 - Phase 9: PASSED
 - Phase 10: PASSED
 - Phase 11: PASSED
-- Phase 12: READY_FOR_REVIEW
-- Phase 13: NOT_STARTED
+- Phase 12: PASSED
+- Phase 13: IN_PROGRESS
 - Phase 14: NOT_STARTED
 - Phase 15: NOT_STARTED
 - Phase 16: NOT_STARTED
@@ -28,7 +28,7 @@ Status: READY_FOR_REVIEW
 `e3b4e57` — Phase 12 implementation passed `npm run verify`; Rojo 7.7.0 built the plugin model.
 
 ## Blocking issues
-The Phase 12 plugin was loaded by Studio but failed during startup because the module lookup used the Plugin object as parent. The lookup is fixed and the rebuilt plugin is installed. Studio must restart to load the replacement; then the user must open the widget and approve localhost access so it shows `Connected`.
+None currently.
 
 ## Next required action
-Restart Roblox Studio, open the Roblox Animator toolbar widget, approve its localhost request, and verify `Connected`; then mark Phase 12 PASSED before starting Phase 13.
+Complete Phase 13's envelope validator, quaternion/CFrame conversion, R6/R15 pose trees, keyframes, markers, loop/priority metadata, import folder, ACK, and Studio validation.
