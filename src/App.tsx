@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useStore } from "zustand";
 import type { StoreApi } from "zustand/vanilla";
 import { invoke, isTauri } from "@tauri-apps/api/core";
@@ -188,36 +188,39 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
     }
   };
 
-  const saveProjectTo = async (path: string) => {
-    let document = store.getState();
-    if (document.isPlaying) {
-      document.pause();
-      document.setCurrentFrame(Math.round(document.currentFrame));
-      document = store.getState();
-    }
-    if (
-      !isPoseRepresentedByTracks(
-        document.rigId,
-        document.tracks,
-        document.pose,
-        document.currentFrame,
+  const saveProjectTo = useCallback(
+    async (path: string) => {
+      let document = store.getState();
+      if (document.isPlaying) {
+        document.pause();
+        document.setCurrentFrame(Math.round(document.currentFrame));
+        document = store.getState();
+      }
+      if (
+        !isPoseRepresentedByTracks(
+          document.rigId,
+          document.tracks,
+          document.pose,
+          document.currentFrame,
+        )
       )
-    )
-      throw new RangeError("Agrega un keyframe a la pose actual antes de guardar.");
-    const project = projectFromEditorDocument(document);
-    await invoke("save_project_file", {
-      path: path.toLowerCase().endsWith(".rbanim") ? path : `${path}.rbanim`,
-      contents: serializeRbanimProjectV1(project),
-    });
-    const normalizedPath = path.toLowerCase().endsWith(".rbanim")
-      ? path
-      : `${path}.rbanim`;
-    setFilePath(normalizedPath);
-    markSaved();
-    setTimelineError("");
-  };
+        throw new RangeError("Agrega un keyframe a la pose actual antes de guardar.");
+      const project = projectFromEditorDocument(document);
+      await invoke("save_project_file", {
+        path: path.toLowerCase().endsWith(".rbanim") ? path : `${path}.rbanim`,
+        contents: serializeRbanimProjectV1(project),
+      });
+      const normalizedPath = path.toLowerCase().endsWith(".rbanim")
+        ? path
+        : `${path}.rbanim`;
+      setFilePath(normalizedPath);
+      markSaved();
+      setTimelineError("");
+    },
+    [markSaved, setFilePath, setTimelineError, store],
+  );
 
-  const saveProjectAs = async () => {
+  const saveProjectAs = useCallback(async () => {
     try {
       const safeName = projectName.replace(/[<>:"/\\|?*]/g, "_");
       const path = await saveDialog({
@@ -230,9 +233,9 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
         error instanceof Error ? error.message : "No se pudo guardar el proyecto.",
       );
     }
-  };
+  }, [projectName, saveProjectTo, setTimelineError]);
 
-  const saveProject = async () => {
+  const saveProject = useCallback(async () => {
     if (!filePath) return saveProjectAs();
     try {
       await saveProjectTo(filePath);
@@ -241,7 +244,7 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
         error instanceof Error ? error.message : "No se pudo guardar el proyecto.",
       );
     }
-  };
+  }, [filePath, saveProjectAs, saveProjectTo, setTimelineError]);
 
   const prepareExport = async () => {
     try {
@@ -279,8 +282,10 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
     }
   };
 
-  const openProject = async () => {
+  const openProject = useCallback(async () => {
     try {
+      if (isDirty && !window.confirm("Hay cambios sin guardar. ¿Abrir otro proyecto?"))
+        return;
       const path = await openDialog({
         multiple: false,
         filters: [{ name: "Roblox Animation Project", extensions: ["rbanim"] }],
@@ -294,9 +299,9 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
         error instanceof Error ? error.message : "No se pudo abrir el proyecto.",
       );
     }
-  };
+  }, [isDirty, loadProject, setTimelineError]);
 
-  const createProject = () => {
+  const createProject = useCallback(() => {
     if (
       isDirty &&
       !window.confirm("Hay cambios sin guardar. ¿Crear una animación nueva?")
@@ -304,7 +309,7 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
       return;
     newProject(rigId);
     setTimelineError("");
-  };
+  }, [isDirty, newProject, rigId, setTimelineError]);
 
   const renameCurrentProject = (name: string) => {
     try {
@@ -348,7 +353,33 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [redo, undo]);
+  }, [createProject, openProject, redo, saveProject, undo]);
+
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if (!(event.ctrlKey || event.metaKey) || event.altKey) return;
+      const target = event.target;
+      if (
+        target instanceof HTMLElement &&
+        (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))
+      )
+        return;
+
+      const key = event.key.toLowerCase();
+      if (key === "s") {
+        event.preventDefault();
+        void saveProject();
+      } else if (key === "o") {
+        event.preventDefault();
+        void openProject();
+      } else if (key === "n") {
+        event.preventDefault();
+        createProject();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [createProject, openProject, saveProject]);
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
@@ -377,22 +408,42 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
         </span>
         <span className="brand-name">Roblox Animator Desktop</span>
         <div className="file-controls" aria-label="Project files">
-          <button aria-label="New project" onClick={createProject}>
+          <button
+            aria-label="New project"
+            aria-keyshortcuts="Control+N Meta+N"
+            title="New project (Ctrl+N)"
+            onClick={createProject}
+          >
             New
           </button>
-          <button aria-label="Open project" onClick={openProject}>
+          <button
+            aria-label="Open project"
+            aria-keyshortcuts="Control+O Meta+O"
+            title="Open project (Ctrl+O)"
+            onClick={openProject}
+          >
             Open
           </button>
-          <button aria-label="Save project" onClick={saveProject}>
+          <button
+            aria-label="Save project"
+            aria-keyshortcuts="Control+S Meta+S"
+            title="Save project (Ctrl+S)"
+            onClick={saveProject}
+          >
             Save
           </button>
-          <button aria-label="Save project as" onClick={saveProjectAs}>
+          <button
+            aria-label="Save project as"
+            title="Save project as"
+            onClick={saveProjectAs}
+          >
             Save As
           </button>
         </div>
         <div className="export-controls" aria-label="Roblox Studio bridge">
           <button
             aria-label="Prepare export"
+            title="Prepare export for Roblox Studio"
             disabled={bridgeStatus.status !== "connected"}
             onClick={() => void prepareExport()}
           >
@@ -418,10 +469,22 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
           />
         </label>
         <div className="history-controls" aria-label="Historial">
-          <button aria-label="Undo" disabled={!canUndo} onClick={undo}>
+          <button
+            aria-label="Undo"
+            aria-keyshortcuts="Control+Z Meta+Z"
+            title="Undo (Ctrl+Z)"
+            disabled={!canUndo}
+            onClick={undo}
+          >
             Undo
           </button>
-          <button aria-label="Redo" disabled={!canRedo} onClick={redo}>
+          <button
+            aria-label="Redo"
+            aria-keyshortcuts="Control+Y Control+Shift+Z Meta+Y Meta+Shift+Z"
+            title="Redo (Ctrl+Y or Ctrl+Shift+Z)"
+            disabled={!canRedo}
+            onClick={redo}
+          >
             Redo
           </button>
         </div>
@@ -429,6 +492,7 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
           <span>Rig</span>
           <select
             aria-label="Rig"
+            title="Rig type"
             value={rigId}
             onChange={(event) => handleRigChange(event.target.value as RigId)}
           >
@@ -547,12 +611,19 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
       <section className="timeline-panel" aria-label="Timeline de animación">
         <div className="timeline-toolbar">
           <strong>Timeline</strong>
-          <button className="timeline-button" aria-label="Stop playback" onClick={stop}>
+          <button
+            className="timeline-button"
+            aria-label="Stop playback"
+            title="Stop playback"
+            onClick={stop}
+          >
             ■
           </button>
           <button
             className="timeline-button primary"
             aria-label={isPlaying ? "Pause playback" : "Play animation"}
+            aria-keyshortcuts="Space"
+            title={isPlaying ? "Pause playback (Space)" : "Play animation (Space)"}
             onClick={isPlaying ? pause : play}
           >
             {isPlaying ? "❚❚" : "▶"}
@@ -908,7 +979,9 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
             }}
           />
         </label>
-        <span>Gizmo: rotación · Coordenadas locales</span>
+        <span title="Use local transforms for the selected joint">
+          Gizmo: rotación · Coordenadas locales
+        </span>
       </footer>
     </main>
   );

@@ -37,6 +37,13 @@ select {
 button {
   color: inherit;
 }
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #91a9ff;
+  outline-offset: 2px;
+}
 
 .app-shell {
   display: flex;

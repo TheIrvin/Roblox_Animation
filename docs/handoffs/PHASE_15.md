@@ -29,4 +29,4 @@ PASSED — Studio import, publication, published-ID playback, movement, marker, 
 
 ## Next action
 
-Continue Phase 16 UX/polish. The restarted desktop app showed a bridge error; check reconnection as part of the bridge and error-state polish.
+Continue Phase 16 UX/polish. The final development app restart reports `Bridge: connected`.

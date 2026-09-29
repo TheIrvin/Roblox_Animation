@@ -42,7 +42,7 @@ None. This phase uses the manual Roblox Studio E2E checklist.
 
 ## Known limitations
 
-The native Studio UI and signed-in creator account were available for publication and published-ID playback. After restarting the desktop development app, its Roblox Studio bridge showed an error state; the saved project still reopened correctly, but bridge reconnection should be checked separately during polish.
+The native Studio UI and signed-in creator account were available for publication and published-ID playback. One initial standalone launch temporarily occupied the bridge port; restarting through `npm run tauri dev` restored `Bridge: connected`.
 
 ## Decisions made
 
@@ -54,4 +54,4 @@ The R15 published asset is available to the test place and its playback and mark
 
 ## Suggested next action
 
-Continue Phase 16 UX/polish, including the bridge reconnect state noted above. Phase 15's complete R6 evidence is in `docs/handoffs/PHASE_15.md`.
+Continue Phase 16 UX/polish. Phase 15's complete R6 evidence is in `docs/handoffs/PHASE_15.md`.

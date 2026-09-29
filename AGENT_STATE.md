@@ -21,14 +21,14 @@ Status: IN_PROGRESS
 - Phase 13: PASSED
 - Phase 14: PASSED
 - Phase 15: PASSED
-- Phase 16: IN_PROGRESS
-- Phase 17: NOT_STARTED
+- Phase 16: PASSED
+- Phase 17: IN_PROGRESS
 
 ## Last verified commit
-`617ac27` — R15 and R6 publication and published-ID E2E evidence recorded.
+`6f2c394` — R15 and R6 save/reopen checks passed after app restart.
 
 ## Blocking issues
-Studio publication, published-ID playback, movement, marker, and desktop save/restart/reopen are verified for both rigs: R15 asset `135657623288200`, R6 asset `118009092366291`. The desktop bridge shows an error state after restarting the app and needs follow-up in Phase 16.
+Studio publication, published-ID playback, movement, marker, and desktop save/restart/reopen are verified for both rigs: R15 asset `135657623288200`, R6 asset `118009092366291`. The bridge reports connected after restarting the app through the development command.
 
 ## Next required action
-Complete Phase 16 UX/polish, including bridge reconnection/error handling, before beginning the local release build in Phase 17.
+Complete the Phase 17 Windows release build, plugin artifact, installation docs, changelog, and smoke checklist.
