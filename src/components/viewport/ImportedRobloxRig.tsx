@@ -121,7 +121,9 @@ function ImportedRobloxRig({
   onEndRotate,
   onFocusJoint,
 }: ImportedRobloxRigProps) {
-  const { scene } = useGLTF(MODEL_URLS[rig.id]);
+  // These bundled Roblox GLTFs are not Draco or Meshopt compressed. Avoid
+  // eagerly creating Meshopt's WebAssembly decoder in the desktop WebView.
+  const { scene } = useGLTF(MODEL_URLS[rig.id], false, false);
   const instance = useMemo(() => makeRigInstance(scene, rig), [rig, scene]);
   const selectedJoint = rig.joints.find((joint) => joint.id === selectedJointId);
   const selectedPivot = selectedJointId

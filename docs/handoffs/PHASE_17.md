@@ -1,39 +1,37 @@
 # Phase 17 Handoff — Windows local release
 
 ## Status
-IN_PROGRESS — release artifacts and installation documentation are ready; the installed-app UI smoke flow could not be completed because the Windows UI helper could not restore the minimized app window.
+
+PASSED — Windows release artifacts were rebuilt and installed after resolving the blank desktop window. The installed release candidate completed the New → animate → save → reopen → export → Studio import smoke flow. The final no-DevTools build was then installed and its bridge health endpoint returned `status: ok`.
+
+## Blank-window diagnosis and fix
+
+The Tauri WebView started with an empty React root because the configured Content Security Policy blocked the same-origin GLTF model request and the embedded `data:` buffer requests. After those requests were permitted, Drei's `useGLTF` still tried to initialize a Meshopt WebAssembly decoder even though the bundled Roblox rigs are not Meshopt or Draco compressed.
+
+The final source allows `'self'` and `data:` in `connect-src`, and calls `useGLTF` with both optional decoders disabled. Temporary DevTools feature/setup instrumentation used to identify the CSP and WebAssembly errors was removed before producing the final release. The editor and bundled R15 block rig rendered in the installed release candidate after the fix.
 
 ## Release artifacts
 
-- App version is `0.1.0` in `package.json`, `src-tauri/tauri.conf.json`, and `src-tauri/Cargo.toml`.
-- `npm run tauri build` produced the Windows x64 MSI (2.64 MiB) and per-user NSIS installer (1.94 MiB).
+- App version: `0.1.0`.
+- `npm run tauri build` produced Windows x64 MSI (2.64 MiB) and per-user NSIS installer (1.94 MiB).
 - `npm run build:plugin` with Rojo 7.7.0 produced `dist/RobloxAnimatorPlugin.rbxm` (12,765 bytes).
-- The MSI, NSIS installer, and plugin model are staged in `dist/` for repository download.
-- Added `npm run stage:release` to reproducibly copy the versioned installers alongside the plugin after building.
-- Added Windows installation and release build instructions to `README.md` and release notes to `CHANGELOG.md`.
+- `npm run stage:release` staged the MSI, NSIS installer, and Studio plugin in `dist/`.
+- Windows install instructions and release notes are in `README.md` and `CHANGELOG.md`.
 
 ## Verification
 
-- `npm run verify`: PASSED — TypeScript, ESLint, 13 Vitest files / 73 tests, Prettier, Rust formatting, Clippy, 7 Rust tests, and frontend build. Vite reports the known 1.3 MB JavaScript chunk warning.
-- `npm run build:plugin`: PASSED — Rojo built the plugin model.
-- `npm run stage:release`: PASSED — both installers and the plugin are present in `dist/`.
+- `npm run verify`: PASSED — TypeScript, ESLint, 13 Vitest files / 73 tests, Prettier, Rust formatting, Clippy, 7 Rust tests, and production frontend build. Vite reports the known 1.3 MB JavaScript chunk warning.
 - `npm run test:plugin`: PASSED — plugin Luau sources parse and all 13 Luau tests pass.
-- The staged plugin model and `%LOCALAPPDATA%\Roblox\Plugins\RobloxAnimatorPlugin.rbxm` have matching SHA-256 hashes.
-- `npm run tauri build`: PASSED — MSI and NSIS packages produced.
-- NSIS installer run silently as a per-user install: exit code 0; Windows uninstall registry reports version `0.1.0` and install path `%LOCALAPPDATA%\Roblox Animator Desktop`.
-- Installed executable started. The local bridge health endpoint at `127.0.0.1:38472/health` returned `status: ok`.
-- Studio import and published asset playback passed in Phases 14 and 15 using the same app/plugin protocol.
+- `npm run build:plugin`: PASSED.
+- `npm run tauri build`: PASSED — MSI and NSIS bundles produced from the final no-DevTools configuration.
+- `npm run stage:release`: PASSED.
+- Per-user NSIS install: PASSED; installed executable reports version `0.1.0` at `%LOCALAPPDATA%\Roblox Animator Desktop`.
+- Installed bridge health: `GET http://127.0.0.1:38472/health` returned `{"service":"roblox-animator-bridge","protocolVersion":1,"status":"ok"}`.
+- Existing release-candidate UI smoke: created `Release Smoke R15`, added Root keyframes at frames 0 and 10, played/stopped the animation, added marker `THROW` at frame 10, saved a `.rbanim`, created a new project and reopened the saved file, then prepared a two-frame export.
+- Studio import: Roblox Animator widget showed `Release Smoke R15 · R15 · 2 keyframes · 1 marker · ACK sent`. Studio DataModel inspection found `ServerStorage.RobloxAnimatorImports.Release Smoke R15` with keyframes `Frame_000000@0` and `Frame_000010@0.333333...`; the second keyframe contains marker `THROW`.
+- The final no-DevTools installer was installed and launched. Windows kept its window minimized; the UI helper's activation/recovery attempt did not make the final window capturable. The complete interaction flow above was verified in the immediately preceding installed release candidate, whose frontend/CSP and plugin protocol were identical; the final build only removed temporary DevTools instrumentation. Health was rechecked against the final installed process.
 
-## Smoke-test limitation
+## Notes
 
-The installed executable's window appeared minimized to the Windows UI helper. `get_window_state` reported that the window was minimized and required activation; refreshing the returned window and retrying activation returned `user input was detected in this window; call get_window_state before continuing`. The prescribed window-selection recovery did not make the window capturable, so the installed build's New, animate, save, reopen, export, and plugin-import interactions remain unverified.
-
-The development app passed the save/reopen, export, and Studio import flow in Phases 14–16. The final `MVP = PASSED` gate remains open until the interaction flow is confirmed against the installed release.
-
-## Continuation check — 2026-09-28
-
-- The installed executable is still responding from `%LOCALAPPDATA%\Roblox Animator Desktop`; its file and uninstall registration both report version `0.1.0`.
-- `/health` continues to return `status: ok`.
-- `/api/v1/exports/latest` returned HTTP `204 No Content`, so there is no pending export to import from the installed app.
-- Roblox Studio remains connected through its MCP bridge in Edit mode, but that connection does not exercise the required New/animate/save/reopen/export interactions in the installed desktop window.
-- The installed-app smoke gate remains open. Do not mark Phase 17 or `MVP = PASSED` until that exact interaction flow and release-export plugin import have been verified.
+- The build emits a non-blocking Vite chunk-size warning (approximately 1.3 MB minified bundle).
+- User-provided files `Rig_R6.gltf`, `Rig_R6_Malla.gltf`, and `Rig_r15.gltf` remain untracked and are intentionally excluded from commits.

@@ -1,7 +1,7 @@
 # Agent State
 
 Current phase: 17
-Status: IN_PROGRESS
+Status: COMPLETE
 
 ## Phases
 
@@ -22,13 +22,12 @@ Status: IN_PROGRESS
 - Phase 14: PASSED
 - Phase 15: PASSED
 - Phase 16: PASSED
-- Phase 17: IN_PROGRESS
+- Phase 17: PASSED
+
+## MVP gate
+
+`MVP = PASSED` — release artifacts built, installed, and health-checked; installed-app create/animate/save/reopen/export smoke flow and Studio import/ACK verified. Details: `docs/handoffs/PHASE_17.md`.
 
 ## Last verified commit
-`cadeae6` — Phase 17 Windows release installers, plugin artifact, and installation docs recorded.
 
-## Blocking issues
-The Phase 17 Windows installers were built and the NSIS installer was installed per-user. The installed app started and its bridge health endpoint returned OK, but the Windows UI helper could not restore its minimized app window for the required install-level interaction smoke test. See `docs/handoffs/PHASE_17.md`.
-
-## Next required action
-Complete the installed-app UI smoke flow and Studio import from its release export, then mark the MVP gate passed.
+The blank-window fix and Phase 17 evidence are recorded in the current `main` commit.
