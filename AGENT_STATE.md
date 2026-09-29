@@ -1,7 +1,7 @@
 # Agent State
 
-Current phase: 11
-Status: PASSED
+Current phase: 12
+Status: IN_PROGRESS
 
 ## Phases
 
@@ -17,7 +17,7 @@ Status: PASSED
 - Phase 9: PASSED
 - Phase 10: PASSED
 - Phase 11: PASSED
-- Phase 12: NOT_STARTED
+- Phase 12: IN_PROGRESS
 - Phase 13: NOT_STARTED
 - Phase 14: NOT_STARTED
 - Phase 15: NOT_STARTED
@@ -31,4 +31,4 @@ Status: PASSED
 None. Phase 8 markers survive the `.rbanim` save/reopen path. Phase 9 full verification also passed.
 
 ## Next required action
-Build the Rojo Studio plugin shell in Phase 12; the Studio permission/connection gate needs Roblox Studio running.
+Build the Rojo project, toolbar/widget, configurable bridge port, health client, and Import Latest shell; then inspect the manual Studio gate.
