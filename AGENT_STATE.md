@@ -25,7 +25,7 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`aeab5c5` — Phase 12 manual connection gate passed and Phase 13 started.
+`4c66033` — Phase 13 implementation, Luau tests, and repository verification passed; Studio import gate remains pending.
 
 ## Blocking issues
 Phase 13's Studio gate remains: restart Studio to load the current plugin build, open the ThrowRock R15 fixture in the desktop app, prepare the export, import it, and verify the resulting KeyframeSequence and marker in ServerStorage.
