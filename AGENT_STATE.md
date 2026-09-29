@@ -25,7 +25,7 @@ Status: IN_PROGRESS
 - Phase 17: IN_PROGRESS
 
 ## Last verified commit
-`4b29eb5` — Phase 16 keyboard shortcuts, unsaved-work protection, focus styles, and tooltips recorded.
+`cadeae6` — Phase 17 Windows release installers, plugin artifact, and installation docs recorded.
 
 ## Blocking issues
 The Phase 17 Windows installers were built and the NSIS installer was installed per-user. The installed app started and its bridge health endpoint returned OK, but the Windows UI helper could not restore its minimized app window for the required install-level interaction smoke test. See `docs/handoffs/PHASE_17.md`.
