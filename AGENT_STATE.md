@@ -25,10 +25,10 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`e3b4e57` — Phase 12 implementation passed `npm run verify`; Rojo 7.7.0 built the plugin model.
+`aeab5c5` — Phase 12 manual connection gate passed and Phase 13 started.
 
 ## Blocking issues
-None currently.
+Phase 13's Studio gate remains: restart Studio to load the current plugin build, open the ThrowRock R15 fixture in the desktop app, prepare the export, import it, and verify the resulting KeyframeSequence and marker in ServerStorage.
 
 ## Next required action
-Complete Phase 13's envelope validator, quaternion/CFrame conversion, R6/R15 pose trees, keyframes, markers, loop/priority metadata, import folder, ACK, and Studio validation.
+Finish Phase 13's manual Studio validation: import ThrowRock R15, inspect its KeyframeSequence hierarchy, keyframe times, marker, loop/priority metadata, and confirm the desktop ACK.

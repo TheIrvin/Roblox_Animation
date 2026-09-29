@@ -1,4 +1,8 @@
 local BridgeClient = require(script.Parent:WaitForChild("BridgeClient"))
+local KeyframeSequenceBuilder = require(script.Parent:WaitForChild("KeyframeSequenceBuilder"))
+local RigValidator = require(script.Parent:WaitForChild("RigValidator"))
+local Selection = game:GetService("Selection")
+local ServerStorage = game:GetService("ServerStorage")
 
 local UI = {}
 
@@ -37,10 +41,10 @@ function UI.create(plugin)
 		Enum.InitialDockState.Right,
 		true,
 		false,
-		330,
-		260,
+		350,
+		320,
 		280,
-		220
+		320
 	)
 	local widget = plugin:CreateDockWidgetPluginGuiAsync("RobloxAnimatorBridge", info)
 	widget.Title = "Roblox Animator"
@@ -98,12 +102,19 @@ function UI.create(plugin)
 		UDim2.fromOffset(0, 156),
 		UDim2.new(1, 0, 0, 36)
 	)
+	local validateRigButton = makeButton(
+		root,
+		"ValidateSelectedRig",
+		"Validate Selected Rig",
+		UDim2.fromOffset(0, 202),
+		UDim2.new(1, 0, 0, 32)
+	)
 	makeLabel(
 		root,
 		"ImportNote",
-		"Phase 13 will build the KeyframeSequence.",
-		UDim2.fromOffset(0, 202),
-		UDim2.new(1, 0, 0, 22)
+		"Imports KeyframeSequences into ServerStorage.RobloxAnimatorImports.",
+		UDim2.fromOffset(0, 246),
+		UDim2.new(1, 0, 0, 42)
 	).TextColor3 = Color3.fromRGB(151, 163, 185)
 
 	local function persistPort()
@@ -139,15 +150,54 @@ function UI.create(plugin)
 				status.Text = message
 				return
 			end
-			local project = envelope.project.project
-			status.Text = string.format(
-				"Export ready: %s · %s\n%d frames · %s",
-				project.name,
-				project.rig,
-				#envelope.frames,
-				envelope.exportId
+			local valid, validationError = KeyframeSequenceBuilder.Validate(envelope)
+			if not valid then
+				status.Text = "Import rejected: " .. validationError
+				local acknowledged, acknowledgementError = BridgeClient.Acknowledge(
+					portBox.Text,
+					envelope.exportId,
+					"rejected",
+					validationError
+				)
+				if not acknowledged then
+					status.Text ..= "\nACK failed: " .. acknowledgementError
+				end
+				return
+			end
+			local ok, sequenceOrError = pcall(function()
+				return KeyframeSequenceBuilder.Import(envelope, ServerStorage)
+			end)
+			local acknowledgementStatus = ok and "imported" or "error"
+			local importedSequence = ok and sequenceOrError or nil
+			local acknowledgementMessage = ok
+				and ("KeyframeSequence created in ServerStorage.RobloxAnimatorImports: " .. importedSequence.Name)
+				or tostring(sequenceOrError)
+			local acknowledged, acknowledgementError = BridgeClient.Acknowledge(
+				portBox.Text,
+				envelope.exportId,
+				acknowledgementStatus,
+				acknowledgementMessage
 			)
+			if ok then
+				status.Text = string.format(
+					"Imported: %s · %s\n%d keyframes · %s markers%s",
+					importedSequence.Name,
+					envelope.project.project.rig,
+					#envelope.frames,
+					#envelope.project.markers,
+					acknowledged and " · ACK sent" or ("\nACK failed: " .. acknowledgementError)
+				)
+			else
+				status.Text = "Import failed: " .. tostring(sequenceOrError)
+				if not acknowledged then
+					status.Text ..= "\nACK failed: " .. acknowledgementError
+				end
+			end
 		end)
+	end)
+	validateRigButton.Activated:Connect(function()
+		local _, message = RigValidator.ValidateSelection(Selection:Get())
+		status.Text = message
 	end)
 
 	task.spawn(function()

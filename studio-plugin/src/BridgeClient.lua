@@ -2,6 +2,7 @@ local HttpService = game:GetService("HttpService")
 
 local BridgeClient = {}
 local HOST = "127.0.0.1"
+local MAX_EXPORT_BYTES = 5 * 1024 * 1024
 
 local function baseUrl(port)
 	local numericPort = tonumber(port)
@@ -63,6 +64,9 @@ function BridgeClient.FetchLatest(port)
 	if not response.Success then
 		return nil, string.format("Bridge returned HTTP %d.", response.StatusCode)
 	end
+	if #response.Body > MAX_EXPORT_BYTES then
+		return nil, "Export payload exceeds the 5 MB size limit."
+	end
 
 	local ok, envelope = pcall(function()
 		return HttpService:JSONDecode(response.Body)
@@ -80,6 +84,37 @@ function BridgeClient.FetchLatest(port)
 		return nil, "The export uses an unsupported rig."
 	end
 	return envelope
+end
+
+function BridgeClient.Acknowledge(port, exportId, status, message)
+	local url, urlError = baseUrl(port)
+	if not url then
+		return false, urlError
+	end
+	if type(exportId) ~= "string" or not exportId:match("^[%w%-_]+$") then
+		return false, "Export ID contains unsupported characters."
+	end
+	if status ~= "imported" and status ~= "rejected" and status ~= "error" then
+		return false, "Unsupported import acknowledgement status."
+	end
+	local ok, response = pcall(function()
+		return HttpService:RequestAsync({
+			Url = url .. "/api/v1/exports/" .. exportId .. "/ack",
+			Method = "POST",
+			Headers = { ["Content-Type"] = "application/json" },
+			Body = HttpService:JSONEncode({
+				status = status,
+				message = string.sub(tostring(message or ""), 1, 512),
+			}),
+		})
+	end)
+	if not ok then
+		return false, "Roblox Studio could not send the import acknowledgement."
+	end
+	if not response.Success and response.StatusCode ~= 204 then
+		return false, string.format("Bridge rejected the import acknowledgement (HTTP %d).", response.StatusCode)
+	end
+	return true
 end
 
 return BridgeClient
