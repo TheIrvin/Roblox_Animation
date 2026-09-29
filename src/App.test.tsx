@@ -25,6 +25,10 @@ describe("editor workspace", () => {
     expect(screen.getByTestId("preview-canvas")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Right Upper Arm" })).toBeInTheDocument();
     expect(screen.getByRole("complementary", { name: "Inspector" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Prepare export" })).toBeDisabled();
+    expect(screen.getByRole("status", { name: "Bridge status" })).toHaveTextContent(
+      "Bridge: unavailable",
+    );
   });
 
   it("selects a joint and edits its canonical rotation through inspector fields", () => {

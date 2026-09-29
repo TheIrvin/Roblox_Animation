@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useStore } from "zustand";
 import type { StoreApi } from "zustand/vanilla";
-import { invoke } from "@tauri-apps/api/core";
+import { invoke, isTauri } from "@tauri-apps/api/core";
 import { open as openDialog, save as saveDialog } from "@tauri-apps/plugin-dialog";
 import {
   eulerXYZFromQuaternion,
@@ -18,11 +18,18 @@ import {
   serializeRbanimProjectV1,
   isPoseRepresentedByTracks,
 } from "./core/project/rbanim";
+import { normalizeProjectForExport } from "./core/export/normalizer";
 import { Viewport } from "./components/viewport/Viewport";
 import { editorStore, type EditorStoreState } from "./store/editorStore";
 import "./App.css";
 
 const RIGS: Record<RigId, RigDefinition> = { R6: R6_RIG, R15: R15_RIG };
+
+interface BridgeUiStatus {
+  readonly status: string;
+  readonly address: string;
+  readonly lastError: string | null;
+}
 
 export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState> }) {
   const rigId = useStore(store, (state) => state.rigId);
@@ -84,6 +91,13 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
   );
   const selectedMarker = markers.find((marker) => marker.id === selectedMarkerId);
   const [timelineError, setTimelineError] = useState("");
+  const isDesktopRuntime = isTauri();
+  const [bridgeStatus, setBridgeStatus] = useState<BridgeUiStatus>({
+    status: isDesktopRuntime ? "checking" : "unavailable",
+    address: "127.0.0.1:38472",
+    lastError: null,
+  });
+  const [exportNotice, setExportNotice] = useState("");
   const [markerName, setMarkerName] = useState("THROW");
   const draggedMarker = useRef(false);
 
@@ -100,6 +114,30 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
     animationFrame = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(animationFrame);
   }, [advancePlayback, isPlaying]);
+
+  useEffect(() => {
+    if (!isDesktopRuntime) return;
+    let active = true;
+    const refreshBridgeStatus = async () => {
+      try {
+        const status = await invoke<BridgeUiStatus>("get_bridge_status");
+        if (active) setBridgeStatus(status);
+      } catch (error) {
+        if (active)
+          setBridgeStatus({
+            status: "error",
+            address: "127.0.0.1:38472",
+            lastError: error instanceof Error ? error.message : String(error),
+          });
+      }
+    };
+    void refreshBridgeStatus();
+    const timer = window.setInterval(() => void refreshBridgeStatus(), 2000);
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+    };
+  }, [isDesktopRuntime]);
 
   const sortedJoints = useMemo(() => [...rig.joints], [rig]);
   const rotation =
@@ -201,6 +239,42 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
     } catch (error) {
       setTimelineError(
         error instanceof Error ? error.message : "No se pudo guardar el proyecto.",
+      );
+    }
+  };
+
+  const prepareExport = async () => {
+    try {
+      let document = store.getState();
+      if (document.isPlaying) {
+        document.pause();
+        document.setCurrentFrame(Math.round(document.currentFrame));
+        document = store.getState();
+      }
+      if (
+        !isPoseRepresentedByTracks(
+          document.rigId,
+          document.tracks,
+          document.pose,
+          document.currentFrame,
+        )
+      )
+        throw new RangeError("Agrega un keyframe a la pose actual antes de exportar.");
+      const project = projectFromEditorDocument(document);
+      const { envelope, diagnostics } = normalizeProjectForExport(project);
+      if (!envelope)
+        throw new RangeError(diagnostics.map(({ message }) => message).join(" "));
+      await invoke("prepare_export", { contents: JSON.stringify(envelope) });
+      const status = await invoke<BridgeUiStatus>("get_bridge_status");
+      setBridgeStatus(status);
+      setExportNotice(
+        `Export ${envelope.exportId.slice(0, 8)} listo en ${status.address}.`,
+      );
+      setTimelineError("");
+    } catch (error) {
+      setExportNotice("");
+      setTimelineError(
+        error instanceof Error ? error.message : "No se pudo preparar el export.",
       );
     }
   };
@@ -315,6 +389,23 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
           <button aria-label="Save project as" onClick={saveProjectAs}>
             Save As
           </button>
+        </div>
+        <div className="export-controls" aria-label="Roblox Studio bridge">
+          <button
+            aria-label="Prepare export"
+            disabled={bridgeStatus.status !== "connected"}
+            onClick={() => void prepareExport()}
+          >
+            Prepare Export
+          </button>
+          <span
+            className={`bridge-indicator ${bridgeStatus.status}`}
+            role="status"
+            aria-label="Bridge status"
+            title={bridgeStatus.lastError ?? bridgeStatus.address}
+          >
+            Bridge: {bridgeStatus.status}
+          </span>
         </div>
         <label className="project-name-control">
           <span>Project</span>
@@ -790,6 +881,11 @@ export function App({ store = editorStore }: { store?: StoreApi<EditorStoreState
         {timelineError && (
           <p className="timeline-error" role="alert">
             {timelineError}
+          </p>
+        )}
+        {exportNotice && (
+          <p className="export-notice" role="status">
+            {exportNotice}
           </p>
         )}
       </section>
