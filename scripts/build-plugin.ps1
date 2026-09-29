@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 $repositoryRoot = Split-Path -Parent $PSScriptRoot
 $projectPath = Join-Path $repositoryRoot "studio-plugin/default.project.json"
-$outputDirectory = Join-Path $repositoryRoot "studio-plugin/build"
+$outputDirectory = Join-Path $repositoryRoot "dist"
 $outputPath = Join-Path $outputDirectory "RobloxAnimatorPlugin.rbxm"
 
 if (-not (Get-Command rojo -ErrorAction SilentlyContinue)) {

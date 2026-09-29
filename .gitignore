@@ -10,6 +10,9 @@ lerna-debug.log*
 node_modules
 dist/*
 !dist/.gitkeep
+!dist/RobloxAnimatorPlugin.rbxm
+!dist/RobloxAnimatorDesktop-0.1.0-Windows-x64.msi
+!dist/RobloxAnimatorDesktop-0.1.0-Windows-x64-setup.exe
 dist-ssr
 *.local
 *.tsbuildinfo

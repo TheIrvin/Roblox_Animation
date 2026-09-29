@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "build:plugin": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-plugin.ps1",
+    "stage:release": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/stage-release.ps1",
     "test:plugin": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-plugin.ps1",
     "test": "vitest run",
     "test:watch": "vitest",
