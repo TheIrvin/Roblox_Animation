@@ -42,7 +42,7 @@ READY_FOR_REVIEW
 - Rojo built `studio-plugin/build/RobloxAnimatorPlugin.rbxm` (3,891 bytes).
 - `npm run verify` passed: TypeScript, ESLint, 13 Vitest files / 73 tests, Prettier, Rust formatting, Clippy, Rust tests (7/7), and Vite production build.
 - Roblox Studio is installed. The plugin was copied to `%LOCALAPPDATA%\Roblox\Plugins\RobloxAnimatorPlugin.rbxm`.
-- Studio was not launched and its localhost permission prompt could not be approved in this run. The required `Connected` UI state is unverified, so Phase 12 is not PASSED.
+- Studio was launched for manual validation, but the plugin's `Connected` UI state and localhost permission decision are still unverified, so Phase 12 is not PASSED.
 
 ## Known limitations
 

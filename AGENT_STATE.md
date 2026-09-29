@@ -25,7 +25,7 @@ Status: READY_FOR_REVIEW
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`4dcbda2` — Phase 12 working tree passed `npm run verify`; Rojo 7.7.0 built the Studio plugin model.
+`400ac17` — Phase 12 implementation passed `npm run verify`; Rojo 7.7.0 built the plugin model.
 
 ## Blocking issues
 Phase 12's manual gate requires the user to open Roblox Studio and approve localhost access so the plugin shows `Connected`.
