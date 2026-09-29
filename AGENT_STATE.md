@@ -1,7 +1,7 @@
 # Agent State
 
 Current phase: 12
-Status: IN_PROGRESS
+Status: READY_FOR_REVIEW
 
 ## Phases
 
@@ -17,7 +17,7 @@ Status: IN_PROGRESS
 - Phase 9: PASSED
 - Phase 10: PASSED
 - Phase 11: PASSED
-- Phase 12: IN_PROGRESS
+- Phase 12: READY_FOR_REVIEW
 - Phase 13: NOT_STARTED
 - Phase 14: NOT_STARTED
 - Phase 15: NOT_STARTED
@@ -25,10 +25,10 @@ Status: IN_PROGRESS
 - Phase 17: NOT_STARTED
 
 ## Last verified commit
-`ffd3032` — Phase 11 implementation passed `npm run verify`; bridge routes, payload validation, ACK, and real loopback TCP smoke pass.
+`4dcbda2` — Phase 12 working tree passed `npm run verify`; Rojo 7.7.0 built the Studio plugin model.
 
 ## Blocking issues
-None. Phase 8 markers survive the `.rbanim` save/reopen path. Phase 9 full verification also passed.
+Phase 12's manual gate requires the user to open Roblox Studio and approve localhost access so the plugin shows `Connected`.
 
 ## Next required action
-Build the Rojo project, toolbar/widget, configurable bridge port, health client, and Import Latest shell; then inspect the manual Studio gate.
+Open the Tauri app and Roblox Studio, approve the plugin's localhost request, verify `Connected`, then mark Phase 12 PASSED before starting Phase 13.

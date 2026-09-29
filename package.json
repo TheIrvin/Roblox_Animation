@@ -8,6 +8,7 @@
     "build": "npm run typecheck && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
+    "build:plugin": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-plugin.ps1",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
