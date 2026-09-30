@@ -28,4 +28,22 @@ New poses use `CubicV2`. Roblox marks `Cubic` as a legacy alias with a known dir
 
 ## Verification status
 
-Frontend playback and export tests assert that R15 root, pelvis, and leg channels remain at identity throughout the sample, R6 exports no torso/root/leg tracks, both rigs export only the intended tracks, and the release marker remains at frame 16. Luau coverage checks that sparse projects produce weight-one animated joints and weight-zero root/limb channels. These are code-level checks; visual playback of this revised choreography and replacement asset publication remain pending a connected Studio session. Previously published IDs in Phase 14/15 describe the earlier full-body versions and must not be treated as evidence for this revision.
+### Automated
+
+- `npm run verify`: passed — TypeScript, ESLint, 13 Vitest files / 73 tests, Prettier, Rust formatting, Clippy, 7 Rust tests, and production frontend build. Vite emitted its existing non-blocking large-chunk warning.
+- `npm run test:plugin`: passed — all 14 Luau tests, including sparse channel weights.
+- The R15 evaluator test checks every half-frame from 0.5 to 22 and asserts root, pelvis, and leg local transforms remain identity.
+- Export tests check the 22-frame sample, intended joint tracks, identity lower-body poses, and `THROW=rock` at frame 16 for both rigs.
+
+### Roblox Studio playback
+
+- Studio MCP connected to place `79451974722950` in Edit mode. Existing R15 and R6 source rigs were cloned under a temporary test folder; the source rigs were not changed.
+- Both normalized sample envelopes were converted into temporary `KeyframeSequence` instances using the same pose-tree, easing, marker, priority, and sparse-weight rules as the plugin builder. Each sequence had 8 keyframes, `Loop=false`, `Priority=Action`, and one marker.
+- Temporary preview animation IDs were registered with `KeyframeSequenceProvider`; both sequences played to completion on their matching cloned rigs. Each track length was `0.733333 s`, and each fired `THROW` exactly once with value `rock`.
+- During playback, maximum measured world-space position and rotation drift were exactly zero for the R15 root, pelvis, and both leg chains. Upper torso, head, and throwing arm rotated. R6 root, shared torso, and both legs also had zero measured drift; head and arms rotated.
+- The temporary clones and sequences were removed after playback. Existing `ServerStorage.RobloxAnimatorImports` entries were left in place.
+
+### Still pending
+
+- The desktop bridge was not running (`127.0.0.1:38472/health` refused the connection), and this environment rejected launching the installed desktop app. Therefore the exact UI path `Prepare Export` → plugin `Import Latest` was not exercised in this session. The plugin builder itself is covered by the 14 passing Luau tests, and Studio playback was performed on sequences created from the normalized sample envelopes.
+- Publish the corrected R15/R6 samples and verify their replacement asset IDs. The IDs in Phase 14/15 describe the earlier full-body animation and are stale for this revision.

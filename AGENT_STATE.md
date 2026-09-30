@@ -26,7 +26,7 @@ Status: IN_PROGRESS
 
 ## MVP gate
 
-The original Phase 17 release smoke remains PASSED for the pre-correction fixtures. The revised ThrowRock upper-body-only acceptance gate is IN_PROGRESS: corrected fixtures and plugin behavior are implemented, but this exact revision still needs Studio playback review and updated published asset IDs. See `docs/handoffs/THROW_ANIMATION_RESEARCH.md`.
+The original Phase 17 release smoke remains PASSED for the pre-correction fixtures. The revised ThrowRock upper-body-only acceptance gate is IN_PROGRESS: automated verification and Studio playback passed for both rigs, but the desktop `Prepare Export` → plugin `Import Latest` UI path and replacement published asset IDs remain to be verified. See `docs/handoffs/THROW_ANIMATION_RESEARCH.md`.
 
 ## Last verified commit
 
@@ -34,8 +34,8 @@ The blank-window fix and original Phase 17 evidence are recorded in `78ef927`. T
 
 ## Blocking issues
 
-Roblox Studio MCP currently reports no connected Studio instances. The revised R15/R6 samples cannot yet be visually played, published, or assigned replacement asset IDs.
+The app bridge was not running during the Studio session, and launching the installed app was rejected by local execution policy. The revised samples have not yet been imported through the desktop/plugin UI or published as replacement assets.
 
 ## Next required action
 
-Open Roblox Studio with the Roblox Animator plugin connected; import both revised samples, inspect the generated pose weights, play them on their matching rigs from multiple angles, then publish and verify replacement asset IDs and the `THROW` marker.
+Start the installed desktop app, open each revised sample, prepare its export, import it with Studio's `Import Latest`, confirm ACK and Explorer structure, then publish each correction and verify replacement IDs and the `THROW` marker. Playback on cloned R15/R6 rigs already passed for the normalized envelopes.
