@@ -43,7 +43,13 @@ New poses use `CubicV2`. Roblox marks `Cubic` as a legacy alias with a known dir
 - During playback, maximum measured world-space position and rotation drift were exactly zero for the R15 root, pelvis, and both leg chains. Upper torso, head, and throwing arm rotated. R6 root, shared torso, and both legs also had zero measured drift; head and arms rotated.
 - The temporary clones and sequences were removed after playback. Existing `ServerStorage.RobloxAnimatorImports` entries were left in place.
 
+### Desktop R6 regression found during user retest
+
+- The R15 result is accepted by the user. The R6 failure came from the stale file at `%LOCALAPPDATA%/Temp/RobloxAnimatorPhase13/ThrowRock-R6.rbanim`, not the corrected repository sample. It had an animated `Torso` track with rotations at frames 9 and 16. R6 uses one shared Torso for the upper and lower body, so those rotations carry the legs with the body.
+- Replaced the Phase13 temp R6 file with the repository's corrected sample. The corrected sample has no Torso track; only head and arm tracks are authored, preserving the R6 lower-body pose.
+- Desktop has not yet reloaded/imported this replacement, so visual confirmation of the corrected R6 file in RA Desktop remains pending. R15 does not need another animation correction.
+
 ### Still pending
 
 - The desktop bridge was not running (`127.0.0.1:38472/health` refused the connection), and this environment rejected launching the installed desktop app. Therefore the exact UI path `Prepare Export` → plugin `Import Latest` was not exercised in this session. The plugin builder itself is covered by the 14 passing Luau tests, and Studio playback was performed on sequences created from the normalized sample envelopes.
-- Publish the corrected R15/R6 samples and verify their replacement asset IDs. The IDs in Phase 14/15 describe the earlier full-body animation and are stale for this revision.
+- Reload the corrected R6 sample in RA Desktop, import it into Studio, and verify that the legs remain planted. Publish the corrected samples and verify replacement asset IDs. The IDs in Phase 14/15 describe earlier animation versions and are stale for this revision.

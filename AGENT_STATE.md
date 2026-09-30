@@ -26,7 +26,7 @@ Status: IN_PROGRESS
 
 ## MVP gate
 
-The original Phase 17 release smoke remains PASSED for the pre-correction fixtures. The revised ThrowRock upper-body-only acceptance gate is IN_PROGRESS: automated verification and Studio playback passed for both rigs, but the desktop `Prepare Export` → plugin `Import Latest` UI path and replacement published asset IDs remain to be verified. See `docs/handoffs/THROW_ANIMATION_RESEARCH.md`.
+The original Phase 17 release smoke remains PASSED for the pre-correction fixtures. R15 upper-body-only playback is accepted. The revised R6 gate is IN_PROGRESS: a user retest found that the Phase13 temp file was stale and still animated the shared `Torso`, which moves the legs. That file has been replaced with the corrected no-Torso-track sample, but it still needs reloading and reimporting in Desktop/Studio. Replacement published asset IDs also remain to be verified. See `docs/handoffs/THROW_ANIMATION_RESEARCH.md`.
 
 ## Last verified commit
 
@@ -34,8 +34,8 @@ The blank-window fix and original Phase 17 evidence are recorded in `78ef927`. T
 
 ## Blocking issues
 
-The app bridge was not running during the Studio session, and launching the installed app was rejected by local execution policy. The revised samples have not yet been imported through the desktop/plugin UI or published as replacement assets.
+The app bridge was not running during the Studio session, and launching the installed app was rejected by local execution policy. The corrected R6 sample was copied into the Phase13 temp folder, but Desktop has not reloaded it or imported it through the plugin UI. Revised assets have not been published as replacement assets.
 
 ## Next required action
 
-Start the installed desktop app, open each revised sample, prepare its export, import it with Studio's `Import Latest`, confirm ACK and Explorer structure, then publish each correction and verify replacement IDs and the `THROW` marker. Playback on cloned R15/R6 rigs already passed for the normalized envelopes.
+Reload `ThrowRock-R6.rbanim` from the Phase13 temp folder in RA Desktop, prepare its export, import with Studio's `Import Latest`, and confirm ACK, planted legs, Explorer structure, and the `THROW` marker. R15 playback already passed and was accepted by the user. Then publish revised assets and verify replacement IDs.
