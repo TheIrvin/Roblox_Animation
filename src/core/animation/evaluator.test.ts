@@ -137,11 +137,11 @@ describe("animation evaluator", () => {
     expect(() => evaluateAnimationFrame({}, pose, Number.NaN)).toThrow(RangeError);
   });
 
-  it("plays the R15 ThrowRock upper-body choreography without moving root or legs", () => {
+  it("plays the R15 ThrowRock upper-body choreography without moving the pelvis, root, or legs", () => {
     const tracks = r15ThrowRock.tracks as unknown as AnimationTracks;
     const basePose = createBindPose(R15_RIG);
     let previous = evaluateAnimationFrame(tracks, basePose, 0);
-    for (let frame = 0.5; frame <= 32; frame += 0.5) {
+    for (let frame = 0.5; frame <= 22; frame += 0.5) {
       const pose = evaluateAnimationFrame(tracks, basePose, frame);
       for (const jointId of Object.keys(tracks)) {
         const rotation = pose[jointId].rotation;
@@ -151,6 +151,7 @@ describe("animation evaluator", () => {
       expect(pose.RightUpperArm.rotation).not.toEqual(previous.RightUpperArm.rotation);
       for (const jointId of [
         "HumanoidRootPart",
+        "LowerTorso",
         "LeftUpperLeg",
         "LeftLowerLeg",
         "LeftFoot",
@@ -164,7 +165,7 @@ describe("animation evaluator", () => {
     }
     expect(tracks).not.toHaveProperty("HumanoidRootPart");
     expect(tracks).not.toHaveProperty("LeftUpperLeg");
-    expect(tracks).toHaveProperty("LowerTorso");
+    expect(tracks).not.toHaveProperty("LowerTorso");
     expect(evaluateAnimationFrame(tracks, basePose, 16).RightUpperArm).toEqual(
       tracks.RightUpperArm.keyframes.find((keyframe) => keyframe.frame === 16)?.transform,
     );

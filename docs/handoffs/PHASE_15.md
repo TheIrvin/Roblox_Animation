@@ -3,6 +3,8 @@
 ## Status
 PASSED — Studio import, publication, published-ID playback, movement, marker, and app save/restart/reopen passed.
 
+> Historical evidence for the pre-correction 0.733-second fixture, which moved the R6 legs. It does not validate the current upper-body-only R6 sample. The published ID below still refers to that earlier motion and must be replaced after the corrected sample is imported and visually approved in Studio.
+
 ## Scope completed
 
 - Confirmed the desktop app's saved `ThrowRock` project uses the R6 rig and includes the `THROW` event and keyframes on Torso and Right Arm.

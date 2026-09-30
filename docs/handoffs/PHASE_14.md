@@ -3,6 +3,8 @@
 ## Status
 PASSED — R15 import, publication, published-ID playback, movement, marker, and app save/restart/reopen passed.
 
+> Historical evidence for the pre-correction 0.733-second full-body fixture. It does not validate the upper-body-only fixture introduced after Phase 17. The published ID below still refers to that earlier motion and must be replaced after the corrected sample is imported and visually approved in Studio.
+
 ## Scope completed
 
 - Confirmed the desktop bridge and Studio plugin connection.

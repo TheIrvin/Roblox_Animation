@@ -135,7 +135,7 @@ Obligatorio:
 ```text
 Rig: R15
 FPS: 30
-Duration: 22
+Duration: 22 frames
 Loop: false
 Priority: Action
 Marker: THROW@16
@@ -146,7 +146,9 @@ Tracks mínimos:
 - RightUpperArm;
 - RightLowerArm;
 - opcional Head;
-- opcional root leve.
+- opcional LeftUpperArm / LeftLowerArm para balance;
+
+Para la variante upper-body-only, `HumanoidRootPart`, `LowerTorso` y las piernas deben conservar transforms identity durante toda la secuencia. No basta con que las pistas de piernas sean sparse: `LowerTorso` es ancestro de las piernas en la jerarquía R15.
 
 No obsesionarse con que la animación sea artísticamente perfecta: es fixture funcional.
 
@@ -155,8 +157,10 @@ No obsesionarse con que la animación sea artísticamente perfecta: es fixture f
 # 9. ThrowRock R6 fixture
 
 Equivalente usando:
-- Torso;
-- Right Arm.
+- Right Arm;
+- Head y Left Arm opcionales para balance.
+
+En esta variante, `HumanoidRootPart`, `Torso` y ambas piernas quedan en identity. R6 comparte un único `Torso` entre brazos y piernas; por tanto, no se anima el torso en ThrowRock cuando el criterio exige mantener las piernas quietas. Ver ADR-009.
 
 Marker:
 ```text

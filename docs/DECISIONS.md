@@ -101,6 +101,35 @@ The viewport displays the supplied Roblox meshes in place of its approximate box
 
 `public/models/roblox-r6.gltf`, `public/models/roblox-r15.gltf`, and `src/components/viewport/ImportedRobloxRig.tsx`.
 
+## ADR-009 — ThrowRock upper-body isolation on standard rigs
+
+**Status:** Accepted
+
+### Context
+
+The ThrowRock acceptance target is a planted lower body with the throw performed by the upper body. In the standard R15 animation hierarchy, `LowerTorso` is above both `UpperTorso` and the leg chains. A non-identity `LowerTorso` pose therefore propagates movement to the legs even when their own pose channels are identity. Standard R6 has a single `Torso` joint shared by the upper and lower body.
+
+### Decision
+
+- R15 ThrowRock leaves `HumanoidRootPart`, `LowerTorso`, and both leg chains at identity; torso motion starts at `UpperTorso` and includes the head and arms.
+- R6 ThrowRock leaves `HumanoidRootPart`, `Torso`, and both legs at identity; it uses head and arm poses. This is the closest safe upper-body-only version on R6's shared torso joint.
+- The R6 fixture is not required to imitate the R15 torso wind-up when doing so would move its legs.
+
+### Alternatives
+
+- Rotate `LowerTorso`/`Torso` and counter-animate both legs. Rejected for the MVP because joint rotations alone may not preserve the hip/foot world positions and require Studio visual validation.
+- Allow the legs to move during the throw. Rejected because it conflicts with the user's stated acceptance target.
+
+### Consequences
+
+- The R15 sequence has a planted pelvis and an expressive waist-up throw.
+- The R6 sequence has reduced torso motion due to its rig hierarchy.
+- Any release assets created from the previous full-body fixtures must be replaced and retested before they represent the current samples.
+
+### Documents/code affected
+
+`docs/11_TEST_PLAN.md`, `docs/handoffs/THROW_ANIMATION_RESEARCH.md`, `src/core/export/fixtures/throw-rock-r15.json`, and `src/core/export/fixtures/throw-rock-r6.json`.
+
 ---
 
 ## ADR template

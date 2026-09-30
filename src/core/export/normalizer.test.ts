@@ -24,17 +24,17 @@ function expectNormalizedFixture(
   const envelope = result.envelope!;
 
   expect(envelope.frames.map(({ frame }) => frame)).toEqual([
-    0, 4, 9, 13, 16, 19, 25, 32,
+    0, 5, 9, 13, 16, 19, 21, 22,
   ]);
   expect(envelope.frames.map(({ timeSeconds }) => timeSeconds)).toEqual([
     0,
-    4 / 30,
-    0.3,
+    5 / 30,
+    9 / 30,
     13 / 30,
     16 / 30,
     19 / 30,
-    25 / 30,
-    32 / 30,
+    21 / 30,
+    22 / 30,
   ]);
   expect(Object.keys(project.tracks).sort()).toEqual([...expectedTrackIds].sort());
   expect(
@@ -71,7 +71,6 @@ describe("Phase 10 export normalizer", () => {
     const envelope = expectNormalizedFixture(
       project,
       [
-        "LowerTorso",
         "UpperTorso",
         "Head",
         "LeftUpperArm",
@@ -82,6 +81,7 @@ describe("Phase 10 export normalizer", () => {
       ],
       [
         "HumanoidRootPart",
+        "LowerTorso",
         "LeftUpperLeg",
         "LeftLowerLeg",
         "LeftFoot",
