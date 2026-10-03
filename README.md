@@ -5,11 +5,11 @@ arquitectura y etapas de implementación están en [`docs/`](docs/).
 
 ## Install on Windows
 
-Download the Windows installer and Studio plugin from [`dist/`](dist/):
+Download one of the Windows installers and the Studio plugin:
 
-1. Run `RobloxAnimatorDesktop-0.1.0-Windows-x64-setup.exe` (per-user NSIS
-   installer) or `RobloxAnimatorDesktop-0.1.0-Windows-x64.msi`.
-2. Copy `RobloxAnimatorPlugin.rbxm` to
+1. Run the [per-user Windows installer (.exe)](dist/RobloxAnimatorDesktop-0.1.0-Windows-x64-setup.exe)
+   or the [Windows Installer package (.msi)](dist/RobloxAnimatorDesktop-0.1.0-Windows-x64.msi).
+2. Download the [Roblox Studio plugin](dist/RobloxAnimatorPlugin.rbxm) and copy it to
    `%LOCALAPPDATA%\Roblox\Plugins\RobloxAnimatorPlugin.rbxm`.
 3. Restart Roblox Studio and open the **Roblox Animator** plugin widget.
 4. Keep the desktop app open while exporting. In Studio, allow the plugin to
