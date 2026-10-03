@@ -48,3 +48,7 @@ npm run stage:release
 
 The installers are generated under `src-tauri/target/release/bundle/` and staged
 with the versioned plugin model in `dist/`.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
